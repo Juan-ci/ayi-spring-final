@@ -29,7 +29,7 @@ public class ClientDetailRequest implements Serializable {
     @ApiModelProperty(position = 2, notes = "Acumulated points of the client")
     private Long acumulatedPoints;
 
-    @NotNull(message = "Client can not be null.")
+//    @NotNull(message = "Client can not be null.")
     @ApiModelProperty(position = 3, required = true, notes = "Client owner of the points")
     private ClientRequest client;
 }

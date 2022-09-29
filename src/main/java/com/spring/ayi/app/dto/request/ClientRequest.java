@@ -39,7 +39,7 @@ public class ClientRequest implements Serializable {
     @ApiModelProperty(position = 4, required = true, notes = "Non empty value, The client detail is required.")
     private ClientDetailRequest clientDetail;
 
-    @NotNull(message = "Address can not be null.")
+//    @NotNull(message = "Address can not be null.")
     @ApiModelProperty(position = 5, required = true, notes = "Non empty value, The address is required.")
     private List<AddressRequest> addresses;
 }
