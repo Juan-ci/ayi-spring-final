@@ -14,10 +14,6 @@ import java.io.Serializable;
 @Builder
 public class ClientDetailRequest implements Serializable {
 
-    private static final Long serialVersionUID = 1L;
-
-    private Long idClientDetail;
-
     private Boolean prime;
 
     private Long acumulatedPoints;

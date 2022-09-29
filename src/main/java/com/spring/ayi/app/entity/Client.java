@@ -6,13 +6,20 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import java.io.Serializable;
+import java.util.List;
 
 @Getter
 @Setter
@@ -39,7 +46,23 @@ public class Client implements Serializable {
     @Column(name = "document_number")
     private String documentNumber;
 
-    //AGREGAR RELACION DETALLE CLIENTE
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "client_detail_id", referencedColumnName = "id_client_detail")
+    private ClientDetail clientDetail;
 
-    //AGREGAR RELACION DIRECCIONES
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinTable(name = "tbl_client_address",
+            joinColumns = @JoinColumn(name = "id_client"),
+            inverseJoinColumns = @JoinColumn(name = "id_address"),
+            uniqueConstraints = @UniqueConstraint(columnNames={"id_address"})
+    )
+    private List<Address> addresses;
+
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinTable(name = "tbl_client_invoice",
+            joinColumns = @JoinColumn(name = "id_client"),
+            inverseJoinColumns = @JoinColumn(name = "id_invoice"),
+            uniqueConstraints = @UniqueConstraint(columnNames={"id_invoice"})
+    )
+    private List<Invoice> invoices;
 }

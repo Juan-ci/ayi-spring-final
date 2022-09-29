@@ -14,8 +14,6 @@ import java.io.Serializable;
 @Builder
 public class InvoiceRequest implements Serializable {
 
-    private final Long serialVersionUID = 1L;
-
     private String description;
 
     private Double total;

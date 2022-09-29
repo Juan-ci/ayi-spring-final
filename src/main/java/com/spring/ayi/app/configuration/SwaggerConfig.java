@@ -23,7 +23,7 @@ public class SwaggerConfig extends WebMvcConfigurerAdapter {
                 .select()
                 .apis(
                         RequestHandlerSelectors
-                                .basePackage("com.ayi.curso.rest.serv.app.controller"))
+                                .basePackage("com.spring.ayi.app.controller"))
                 .apis(RequestHandlerSelectors.any())
                 .paths(PathSelectors.any())
                 .build();

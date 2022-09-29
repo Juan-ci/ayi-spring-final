@@ -14,8 +14,6 @@ import java.io.Serializable;
 @Builder
 public class ClientDetailResponse implements Serializable {
 
-    private static final Long serialVersionUID = 1L;
-
     private Long idClientDetail;
 
     private Boolean prime;

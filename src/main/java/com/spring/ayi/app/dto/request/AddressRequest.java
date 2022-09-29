@@ -20,8 +20,6 @@ import java.io.Serializable;
 )
 public class AddressRequest implements Serializable {
 
-    private final Long serialVersionUID = 1L;
-
     @ApiModelProperty(position = 1, required = true, notes = "Not null value, street is required")
     private String street;
 

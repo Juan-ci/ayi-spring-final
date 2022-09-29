@@ -11,6 +11,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import java.io.Serializable;
 
@@ -36,5 +38,7 @@ public class ClientDetail implements Serializable {
     @Column(name = "acumulated_points")
     private Long acumulatedPoints;
 
-    //AGREGAR CLIENTE?
+    @OneToOne
+    @JoinColumn(name = "client_id")
+    private Client client;
 }

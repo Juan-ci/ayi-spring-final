@@ -14,8 +14,6 @@ import java.io.Serializable;
 @Builder
 public class InvoiceResponse implements Serializable {
 
-    private final Long serialVersionUID = 1L;
-
     private Long idInvoice;
 
     private String description;

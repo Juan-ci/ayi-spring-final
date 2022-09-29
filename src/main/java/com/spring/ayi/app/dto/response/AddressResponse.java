@@ -14,8 +14,6 @@ import java.io.Serializable;
 @Builder
 public class AddressResponse implements Serializable {
 
-    private final Long serialVersionUID = 1L;
-
     private Long idAddress;
 
     private String street;
