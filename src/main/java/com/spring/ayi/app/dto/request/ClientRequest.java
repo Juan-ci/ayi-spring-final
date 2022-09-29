@@ -19,7 +19,7 @@ import java.util.List;
 @Builder
 @ApiModel(
         value = "ClientRequest",
-        description = "Represents the data needed to created Clients"
+        description = "Represents the data needed to creat Clients"
 )
 public class ClientRequest implements Serializable {
 
