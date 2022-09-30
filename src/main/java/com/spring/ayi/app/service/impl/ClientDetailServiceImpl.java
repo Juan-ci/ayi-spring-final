@@ -10,6 +10,8 @@ import com.spring.ayi.app.service.IClientDetailService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
+
 @Service
 @AllArgsConstructor
 public class ClientDetailServiceImpl implements IClientDetailService {
@@ -19,6 +21,7 @@ public class ClientDetailServiceImpl implements IClientDetailService {
     private IClientDetailMapper clientDetailMapper;
 
     @Override
+    @Transactional
     public ClientDetailResponse createClientDetail(ClientDetailRequest request) {
         ClientDetail clientDetail = clientDetailMapper.convertDtoToEntity(request);
         Client client = clientDetail.getClient();

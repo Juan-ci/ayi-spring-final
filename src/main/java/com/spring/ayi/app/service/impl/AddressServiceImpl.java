@@ -10,6 +10,8 @@ import com.spring.ayi.app.service.IAddressService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
+
 @Service
 @AllArgsConstructor
 public class AddressServiceImpl implements IAddressService {
@@ -19,10 +21,12 @@ public class AddressServiceImpl implements IAddressService {
     private IAddressMapper addressMapper;
 
     @Override
+    @Transactional
     public AddressResponse createAddress(AddressRequest request) {
         Address address = addressMapper.convertDtoToEntity(request);
         Client client = address.getClient();
 
+//        BIDIRECCIONALIDAD EN LA RELACIÓN PARA ACTUALIZAR LA LISTA DE ADDRESS DEL CLIENTE??
         address.setClient(client);
         address = addressRepository.save(address);
 
