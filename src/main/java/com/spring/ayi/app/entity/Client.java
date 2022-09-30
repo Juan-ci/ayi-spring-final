@@ -1,5 +1,6 @@
 package com.spring.ayi.app.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,6 +20,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -30,7 +32,7 @@ import java.util.List;
 @Table(name = "client")
 public class Client implements Serializable {
 
-    private static long serialVersionUID = 1L;
+    private static final Long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -51,18 +53,8 @@ public class Client implements Serializable {
     private ClientDetail clientDetail;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinTable(name = "tbl_client_address",
-            joinColumns = @JoinColumn(name = "id_client"),
-            inverseJoinColumns = @JoinColumn(name = "id_address"),
-            uniqueConstraints = @UniqueConstraint(columnNames={"id_address"})
-    )
-    private List<Address> addresses;
+    private List<Address> addresses = new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinTable(name = "tbl_client_invoice",
-            joinColumns = @JoinColumn(name = "id_client"),
-            inverseJoinColumns = @JoinColumn(name = "id_invoice"),
-            uniqueConstraints = @UniqueConstraint(columnNames={"id_invoice"})
-    )
-    private List<Invoice> invoices;
+    private List<Invoice> invoices = new ArrayList<>();
 }

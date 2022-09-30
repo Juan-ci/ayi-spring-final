@@ -15,7 +15,7 @@ public class AddressMapperImpl implements IAddressMapper {
     private final ModelMapper modelMapper;
 
     @Override
-    public Address convertDtoTontity(AddressRequest request) {
+    public Address convertDtoToEntity(AddressRequest request) {
         return modelMapper.map(request, Address.class);
     }
 
