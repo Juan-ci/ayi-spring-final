@@ -19,9 +19,15 @@ import java.util.List;
 @Builder
 @ApiModel(
         value = "ClientRequest",
-        description = "Represents the data needed to creat Clients"
+        description = "Represents the data needed to create Clients"
 )
 public class ClientRequest implements Serializable {
+
+    /**
+     * Basic data needed to create a client,
+     * it is not allowed to add invoices when
+     * you are creating the client
+     */
 
     @NotNull(message = "Name can not be null.")
     @ApiModelProperty(position = 1, required = true, notes = "Non empty value, The first name is required.")
@@ -39,7 +45,7 @@ public class ClientRequest implements Serializable {
     @ApiModelProperty(position = 4, required = true, notes = "Non empty value, The client detail is required.")
     private ClientDetailRequest clientDetail;
 
-//    @NotNull(message = "Address can not be null.")
+    @NotNull(message = "Address can not be null.")
     @ApiModelProperty(position = 5, required = true, notes = "Non empty value, The address is required.")
     private List<AddressRequest> addresses;
 }
