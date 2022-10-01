@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.transaction.Transactional;
+import java.util.NoSuchElementException;
 
 @Service
 public interface IClientService {
@@ -14,4 +15,7 @@ public interface IClientService {
 
     @Transactional
     GenericListPaginationResponse<ClientResponse> getClientPage(String uri, int pageReq, Integer size, UriComponentsBuilder uriBuilder);
+
+    @Transactional
+    ClientResponse updateClient(Long id, ClientRequest request) throws NoSuchElementException;
 }

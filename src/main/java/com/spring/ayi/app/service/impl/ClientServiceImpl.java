@@ -18,6 +18,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 @Service
@@ -101,6 +102,45 @@ public class ClientServiceImpl implements IClientService {
             //  AGREGAR CUSTOM EXCEPTION
             throw new RuntimeException("No hay clientes para mostrar.");
         }
+    }
+
+    @Override
+    @Transactional
+    public ClientResponse updateClient(Long id, ClientRequest request) throws NoSuchElementException {
+        //No se agregan facturas ya que se actualiza el cliente cuando se crean nuevas facturas
+
+        Client dataToUpdate = clientMapper.convertDtoToEntity(request);
+        Client clientToUpdate = this.getClientById(id);
+
+        clientToUpdate.setClientDetail(dataToUpdate.getClientDetail());
+        clientToUpdate.setDocumentNumber(dataToUpdate.getDocumentNumber());
+        clientToUpdate.setName(dataToUpdate.getName());
+        clientToUpdate.setLastname(dataToUpdate.getLastname());
+
+        //SI LA LISTA DE DIRECCIONES ES DISTINTA DE NULA Y NO ESTA VACÍA, ACTUALIZAR
+        List<Address> newAddresses = dataToUpdate.getAddresses();
+        if( newAddresses != null && !newAddresses.isEmpty()) {
+            // Get the old addresses
+            List<Address> currentAddresses = clientToUpdate.getAddresses();
+
+            newAddresses.forEach(address -> {
+                // Add the new addresses
+                currentAddresses.add(address);
+            });
+            // Set the new list of addresses
+            clientToUpdate.setAddresses(currentAddresses);
+        }
+
+        clientToUpdate = clientRepository.save(clientToUpdate);
+
+        return clientMapper.convertEntityToDto(clientToUpdate);
+    }
+
+    private Client getClientById(Long id) throws NoSuchElementException {
+        return clientRepository.findById(id)
+                .orElseThrow(
+                        () -> new NoSuchElementException("EL ID " + id + " NO EXISTE.")
+                );
     }
 
     private String constructPrevPageUri(UriComponentsBuilder uriBuilder, int pageReq) {
