@@ -17,6 +17,9 @@ public interface IClientService {
     GenericListPaginationResponse<ClientResponse> getClientPage(String uri, int pageReq, Integer size, UriComponentsBuilder uriBuilder);
 
     @Transactional
+    ClientResponse getOneClientById(Long idClient) throws NoSuchElementException;
+
+    @Transactional
     ClientResponse updateClient(Long id, ClientRequest request) throws NoSuchElementException;
 
     @Transactional

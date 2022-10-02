@@ -106,6 +106,14 @@ public class ClientServiceImpl implements IClientService {
 
     @Override
     @Transactional
+    public ClientResponse getOneClientById(Long idClient) throws NoSuchElementException{
+        Client client = this.getClientById(idClient);
+
+        return clientMapper.convertEntityToDto(client);
+    }
+
+    @Override
+    @Transactional
     public ClientResponse updateClient(Long id, ClientRequest request) throws NoSuchElementException {
         //No se agregan facturas ya que se actualiza el cliente cuando se crean nuevas facturas
 

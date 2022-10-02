@@ -35,6 +35,12 @@ public class ClientControllerImpl implements IClientController {
     }
 
     @Override
+    public ResponseEntity<?> getClientById(Long id) {
+        ClientResponse response = clientService.getOneClientById(id);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @Override
     public ResponseEntity<?> updateClient(Long idPerson, ClientRequest request) {
         ClientResponse response = clientService.updateClient(idPerson, request);
         return new ResponseEntity<>(response, HttpStatus.OK);

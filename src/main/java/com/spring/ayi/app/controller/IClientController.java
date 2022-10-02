@@ -58,6 +58,25 @@ public interface IClientController {
             @RequestParam(name = "size", defaultValue = "5") Integer size,
             UriComponentsBuilder uriBuilder);
 
+    @GetMapping(value = "/getClientById/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(
+            value = "Retrieves a client by the id",
+            httpMethod = "GET",
+            response = ClientResponse.class
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    code = 200,
+                    message = "Body content with all information about a client"
+            ),
+            @ApiResponse(
+                    code = 400,
+                    message = "Describes errors on invalid payload received, e.g: missing fields, invalid data formats, etc.")
+    })
+    ResponseEntity<?> getClientById(
+            @ApiParam(name = "id", required = true, value = "Client Id", example = "1")
+            @PathVariable("id") Long id);
+
     @PutMapping(value = "/updateClient/{id}")
     @ApiOperation(
             value = "Retrieves a client updated",
