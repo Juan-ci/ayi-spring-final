@@ -18,4 +18,7 @@ public interface IClientService {
 
     @Transactional
     ClientResponse updateClient(Long id, ClientRequest request) throws NoSuchElementException;
+
+    @Transactional
+    void deleteClientById(Long idClient) throws NoSuchElementException;
 }

@@ -1,6 +1,7 @@
 package com.spring.ayi.app.entity;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -22,6 +23,7 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
+@Builder
 @Entity
 @Table(name = "client_detail")
 public class ClientDetail implements Serializable {
@@ -42,4 +44,7 @@ public class ClientDetail implements Serializable {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "client_id")
     private Client client;
+
+    @Column(name = "soft_delete")
+    private Boolean softDelete = Boolean.FALSE;
 }

@@ -57,4 +57,7 @@ public class Client implements Serializable {
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Invoice> invoices = new ArrayList<>();
+
+    @Column(name = "soft_delete")
+    private Boolean softDelete = Boolean.FALSE;
 }

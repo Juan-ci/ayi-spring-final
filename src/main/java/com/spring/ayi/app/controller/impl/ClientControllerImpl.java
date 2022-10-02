@@ -9,7 +9,6 @@ import io.swagger.annotations.Api;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -33,5 +32,17 @@ public class ClientControllerImpl implements IClientController {
     public ResponseEntity<?> getAllClientsForPage(Integer page, Integer size, UriComponentsBuilder uriBuilder) {
         GenericListPaginationResponse<ClientResponse> response = clientService.getClientPage("/client/",page,size,uriBuilder);
         return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<?> updateClient(Long idPerson, ClientRequest request) {
+        ClientResponse response = clientService.updateClient(idPerson, request);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity deleteClientById(Long id) {
+        clientService.deleteClientById(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

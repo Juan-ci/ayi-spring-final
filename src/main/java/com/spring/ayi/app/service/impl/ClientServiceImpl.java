@@ -117,14 +117,34 @@ public class ClientServiceImpl implements IClientService {
         clientToUpdate.setName(dataToUpdate.getName());
         clientToUpdate.setLastname(dataToUpdate.getLastname());
 
+        /*if (request.getClientDetail() != null) {
+            *//**
+             * Old client detail
+             *//*
+            ClientDetail currentClientDetail = clientToUpdate.getClientDetail();
+            Check why the id client detail is null
+            System.out.println("id client detail " + clientToUpdate.getClientDetail().getIdClientDetail());
+
+            *//**
+             * New Client detail
+             *//*
+            ClientDetail clientDetailUpdated = dataToUpdate.getClientDetail();
+            clientDetailUpdated.setIdClientDetail(clientDetailUpdated.getIdClientDetail());
+            clientDetailUpdated.setClient(clientToUpdate);
+
+            clientToUpdate.setClientDetail(clientDetailUpdated);
+        }
+*/
         //SI LA LISTA DE DIRECCIONES ES DISTINTA DE NULA Y NO ESTA VACÍA, ACTUALIZAR
         List<Address> newAddresses = dataToUpdate.getAddresses();
         if( newAddresses != null && !newAddresses.isEmpty()) {
             // Get the old addresses
             List<Address> currentAddresses = clientToUpdate.getAddresses();
 
+            Client finalClientToUpdate = clientToUpdate;
             newAddresses.forEach(address -> {
                 // Add the new addresses
+                address.setClient(finalClientToUpdate);
                 currentAddresses.add(address);
             });
             // Set the new list of addresses
@@ -134,6 +154,16 @@ public class ClientServiceImpl implements IClientService {
         clientToUpdate = clientRepository.save(clientToUpdate);
 
         return clientMapper.convertEntityToDto(clientToUpdate);
+    }
+
+    @Override
+    @Transactional
+    public void deleteClientById(Long idClient) throws NoSuchElementException {
+        Client clientToDelete = this.getClientById(idClient);
+
+        clientToDelete.setSoftDelete(Boolean.TRUE);
+
+        clientRepository.save(clientToDelete);
     }
 
     private Client getClientById(Long id) throws NoSuchElementException {
