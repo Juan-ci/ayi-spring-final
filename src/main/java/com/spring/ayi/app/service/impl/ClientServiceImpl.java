@@ -115,35 +115,29 @@ public class ClientServiceImpl implements IClientService {
     @Override
     @Transactional
     public ClientResponse updateClient(Long id, ClientRequest request) throws NoSuchElementException {
-        //No se agregan facturas ya que se actualiza el cliente cuando se crean nuevas facturas
+        /**
+         * No se agregan facturas ya que se actualiza el cliente cuando se crean nuevas facturas
+         */
 
         Client dataToUpdate = clientMapper.convertDtoToEntity(request);
         Client clientToUpdate = this.getClientById(id);
+
+        if (request.getClientDetail() != null) {
+            /**
+             * Updated Client detail
+             */
+            ClientDetail clientDetailUpdated = dataToUpdate.getClientDetail();
+            clientDetailUpdated.setIdClientDetail(clientToUpdate.getClientDetail().getIdClientDetail());
+            clientDetailUpdated.setClient(clientToUpdate);
+
+            clientToUpdate.setClientDetail(clientDetailUpdated);
+        }
 
         clientToUpdate.setClientDetail(dataToUpdate.getClientDetail());
         clientToUpdate.setDocumentNumber(dataToUpdate.getDocumentNumber());
         clientToUpdate.setName(dataToUpdate.getName());
         clientToUpdate.setLastname(dataToUpdate.getLastname());
 
-        /*if (request.getClientDetail() != null) {
-            *//**
-             * Old client detail
-             *//*
-            ClientDetail currentClientDetail = clientToUpdate.getClientDetail();
-            Check why the id client detail is null
-            System.out.println("id client detail " + clientToUpdate.getClientDetail().getIdClientDetail());
-
-            *//**
-             * New Client detail
-             *//*
-            ClientDetail clientDetailUpdated = dataToUpdate.getClientDetail();
-            clientDetailUpdated.setIdClientDetail(clientDetailUpdated.getIdClientDetail());
-            clientDetailUpdated.setClient(clientToUpdate);
-
-            clientToUpdate.setClientDetail(clientDetailUpdated);
-        }
-*/
-        //SI LA LISTA DE DIRECCIONES ES DISTINTA DE NULA Y NO ESTA VACÍA, ACTUALIZAR
         List<Address> newAddresses = dataToUpdate.getAddresses();
         if( newAddresses != null && !newAddresses.isEmpty()) {
             // Get the old addresses
