@@ -59,4 +59,7 @@ public class Address implements Serializable {
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "client_id")
     private Client client;
+
+    @Column(name = "soft_delete")
+    private Boolean softDelete = Boolean.FALSE;
 }
