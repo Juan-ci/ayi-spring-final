@@ -1,11 +1,13 @@
 package com.spring.ayi.app.service.impl;
 
+import com.spring.ayi.app.constants.ExceptionMessages.ExceptionMessages;
 import com.spring.ayi.app.dto.request.ClientRequest;
 import com.spring.ayi.app.dto.response.ClientResponse;
 import com.spring.ayi.app.dto.response.GenericListPaginationResponse;
 import com.spring.ayi.app.entity.Address;
 import com.spring.ayi.app.entity.Client;
 import com.spring.ayi.app.entity.ClientDetail;
+import com.spring.ayi.app.exception.DocumentNumberAlreadyExistException;
 import com.spring.ayi.app.mapper.IClientMapper;
 import com.spring.ayi.app.repository.IClientRepository;
 import com.spring.ayi.app.service.IClientService;
@@ -21,6 +23,9 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
+import static com.spring.ayi.app.constants.ExceptionMessages.ExceptionMessages.DOCUMENT_ALREADY_EXIST;
+import static java.text.MessageFormat.format;
+
 @Service
 @AllArgsConstructor
 public class ClientServiceImpl implements IClientService {
@@ -31,23 +36,28 @@ public class ClientServiceImpl implements IClientService {
 
     @Override
     @Transactional
-    public ClientResponse createClient(ClientRequest request) {
+    public ClientResponse createClient(ClientRequest request) throws DocumentNumberAlreadyExistException {
         Client client = clientMapper.convertDtoToEntity(request);
         ClientDetail clientDetail = client.getClientDetail();
+        String documentNumber = client.getDocumentNumber();
         List<Address> address = client.getAddresses();
 
-        if (address != null && address.size() > 0) {
-            Client finalClient = client;
-            address.forEach(addr -> {
-                addr.setClient(finalClient);
-            });
+        if (!clientRepository.existsByDocumentNumber(documentNumber)) {
+            if (address != null && address.size() > 0) {
+                Client finalClient = client;
+                address.forEach(addr -> {
+                    addr.setClient(finalClient);
+                });
+            }
+
+            clientDetail.setClient(client);
+            client.setAddresses(address);
+            client = clientRepository.save(client);
+
+            return clientMapper.convertEntityToDto(client);
+        } else {
+            throw new DocumentNumberAlreadyExistException(format(DOCUMENT_ALREADY_EXIST, documentNumber));
         }
-
-        clientDetail.setClient(client);
-        client.setAddresses(address);
-        client = clientRepository.save(client);
-
-        return clientMapper.convertEntityToDto(client);
     }
 
     @Override

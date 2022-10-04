@@ -4,6 +4,7 @@ import com.spring.ayi.app.dto.request.ClientRequest;
 import com.spring.ayi.app.dto.response.ClientResponse;
 import com.spring.ayi.app.dto.response.GenericListPaginationResponse;
 import com.spring.ayi.app.entity.Client;
+import com.spring.ayi.app.exception.DocumentNumberAlreadyExistException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -12,7 +13,7 @@ import java.util.NoSuchElementException;
 
 @Service
 public interface IClientService {
-    ClientResponse createClient(ClientRequest request);
+    ClientResponse createClient(ClientRequest request) throws DocumentNumberAlreadyExistException;
 
     @Transactional
     GenericListPaginationResponse<ClientResponse> getClientPage(String uri, int pageReq, Integer size, UriComponentsBuilder uriBuilder);

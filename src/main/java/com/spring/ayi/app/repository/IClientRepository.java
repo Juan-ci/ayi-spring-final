@@ -11,4 +11,6 @@ import java.util.Optional;
 public interface IClientRepository extends JpaRepository<Client, Long> {
 
     Optional<Client> findByDocumentNumber(String documentNumber) throws NoSuchElementException;
+
+    Boolean existsByDocumentNumber(String documentNumber);
 }
