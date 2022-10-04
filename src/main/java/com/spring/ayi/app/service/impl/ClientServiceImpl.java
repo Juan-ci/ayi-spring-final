@@ -168,6 +168,16 @@ public class ClientServiceImpl implements IClientService {
         clientRepository.save(clientToDelete);
     }
 
+    @Override
+    @Transactional
+    public Client getClientByDocumentNumber(String documentNumber) throws NoSuchElementException {
+        return clientRepository
+                .findByDocumentNumber(documentNumber)
+                .orElseThrow(
+                        () -> new NoSuchElementException("No se encontró el cliente con dni " + documentNumber)
+                );
+    }
+
     private Client getClientById(Long id) throws NoSuchElementException {
         return clientRepository.findById(id)
                 .orElseThrow(

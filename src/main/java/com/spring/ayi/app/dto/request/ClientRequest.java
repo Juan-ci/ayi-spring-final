@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.List;
@@ -46,6 +47,7 @@ public class ClientRequest implements Serializable {
     private ClientDetailRequest clientDetail;
 
     @NotNull(message = "Address can not be null.")
+    @NotBlank(message = "Address can not be blank.")
     @ApiModelProperty(position = 5, required = true, notes = "Non empty value, The address is required.")
     private List<AddressRequest> addresses;
 }

@@ -48,7 +48,7 @@ public class AddressRequest implements Serializable {
     @ApiModelProperty(position = 7, required = true, notes = "Not null value, country is required")
     private String country;
 
-//    @NotNull(message = "Client can not be null")
-    @ApiModelProperty(position = 8, required = true, notes = "Not null value, client is required.")
-    private ClientRequest client;
+    @NotNull(message = "Client document number can not be null")
+    @ApiModelProperty(position = 8, required = true, notes = "Not null value, client document number is required.")
+    private String clientDocumentNumber;
 }

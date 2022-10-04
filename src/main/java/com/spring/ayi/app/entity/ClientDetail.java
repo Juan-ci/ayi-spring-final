@@ -1,5 +1,6 @@
 package com.spring.ayi.app.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -42,6 +43,7 @@ public class ClientDetail implements Serializable {
     private Long acumulatedPoints;
 
     @OneToOne(fetch = FetchType.LAZY)
+    @JsonIgnoreProperties(value = "clientDetail")
     @JoinColumn(name = "client_id")
     private Client client;
 

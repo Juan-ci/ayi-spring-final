@@ -1,6 +1,6 @@
 package com.spring.ayi.app.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,11 +14,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -45,11 +43,12 @@ public class Client implements Serializable {
     @Column(name = "lastname")
     private String lastname;
 
-    @Column(name = "document_number")
+    @Column(name = "document_number", unique = true)
     private String documentNumber;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "client_detail_id", referencedColumnName = "id_client_detail")
+    @JsonIgnoreProperties(value = "client")
     private ClientDetail clientDetail;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)

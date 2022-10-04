@@ -3,6 +3,7 @@ package com.spring.ayi.app.service;
 import com.spring.ayi.app.dto.request.ClientRequest;
 import com.spring.ayi.app.dto.response.ClientResponse;
 import com.spring.ayi.app.dto.response.GenericListPaginationResponse;
+import com.spring.ayi.app.entity.Client;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -24,4 +25,7 @@ public interface IClientService {
 
     @Transactional
     void deleteClientById(Long idClient) throws NoSuchElementException;
+
+    @Transactional
+    Client getClientByDocumentNumber(String documentNumber) throws NoSuchElementException;
 }
