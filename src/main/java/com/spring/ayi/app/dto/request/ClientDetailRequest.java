@@ -18,7 +18,7 @@ import java.io.Serializable;
 @Builder
 @ApiModel(
         value = "ClientDetailRequest",
-        description = "Represents the data needed to creat Clients details"
+        description = "Represents the data needed to create Clients details"
 )
 public class ClientDetailRequest implements Serializable {
 
@@ -29,7 +29,7 @@ public class ClientDetailRequest implements Serializable {
     @ApiModelProperty(position = 2, notes = "Acumulated points of the client")
     private Long acumulatedPoints;
 
-//    @NotNull(message = "Client can not be null.")
-    @ApiModelProperty(position = 3, required = true, notes = "Client owner of the points")
-    private ClientRequest client;
+    @NotNull(message = "Client document number can not be null.")
+    @ApiModelProperty(position = 3, required = true, notes = "Client owner of the details")
+    private String clientDocumentNumber;
 }

@@ -3,6 +3,8 @@ package com.spring.ayi.app.controller;
 import com.spring.ayi.app.dto.request.AddressRequest;
 import com.spring.ayi.app.dto.response.AddressResponse;
 import com.spring.ayi.app.dto.response.GenericListPaginationResponse;
+import com.spring.ayi.app.exception.AddressNotFoundException;
+import com.spring.ayi.app.exception.DocumentNumberNotFoundException;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
@@ -17,8 +19,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.util.UriComponentsBuilder;
-
-import java.util.NoSuchElementException;
 
 public interface IAddressController {
 
@@ -35,10 +35,10 @@ public interface IAddressController {
             @ApiResponse(code = 400,
                     message = "Describes errors on invalid payload received, e.g: missing fields, invalid data form")
     })
-    ResponseEntity<?> createAddress(
+    ResponseEntity<AddressResponse> createAddress(
             @ApiParam(value = "data of address", required = true)
             @RequestBody AddressRequest request
-    ) throws NoSuchElementException;
+    ) throws DocumentNumberNotFoundException;
 
     @GetMapping(value = "/getAllAddress", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(
@@ -54,7 +54,7 @@ public interface IAddressController {
                     code = 400,
                     message = "Describes errors on invalid payload received, e.g: missing fields, invalid data formats, etc.")
     })
-    ResponseEntity<?> getAllAddressForPage(
+    ResponseEntity<GenericListPaginationResponse<AddressResponse>> getAllAddressForPage(
             @ApiParam(value = "page to display", example = "1")
             @RequestParam(name = "page", defaultValue = "0") Integer page,
             @ApiParam(value = "number of items per request", example = "1")
@@ -76,9 +76,9 @@ public interface IAddressController {
                     code = 400,
                     message = "Describes errors on invalid payload received, e.g: missing fields, invalid data formats, etc.")
     })
-    ResponseEntity<?> getAddressById(
+    ResponseEntity<AddressResponse> getAddressById(
             @ApiParam(name = "id", required = true, value = "Address Id", example = "1")
-            @PathVariable("id") Long idAddress) throws NoSuchElementException;
+            @PathVariable("id") Long idAddress) throws AddressNotFoundException;
 
     @PutMapping(value = "/updateAddress/{id}")
     @ApiOperation(
@@ -93,12 +93,12 @@ public interface IAddressController {
             @ApiResponse(code = 400,
                     message = "Describes errors on invalid payload received, e.g: missing fields, invalid data form")
     })
-    ResponseEntity<?> updateAddress(
+    ResponseEntity<AddressResponse> updateAddress(
             @ApiParam(value = "id of address to update", required = true, example = "1")
             @PathVariable(name = "id") Long idAddress,
             @ApiParam(value = "data of address", required = true)
             @RequestBody AddressRequest request
-    ) throws NoSuchElementException;
+    ) throws AddressNotFoundException;
 
     @DeleteMapping(value = "/deleteAddressById/{id}")
     @ApiOperation(
@@ -114,7 +114,7 @@ public interface IAddressController {
                     code = 404,
                     message = "Describes errors on invalid id wich is not found.")
     })
-    ResponseEntity deleteAddreessById(
+    ResponseEntity<Void> deleteAddressById(
             @ApiParam(name = "id", required = true, value = "Address Id", example = "1")
-            @PathVariable("id") Long idAddress) throws NoSuchElementException;
+            @PathVariable("id") Long idAddress) throws AddressNotFoundException;
 }

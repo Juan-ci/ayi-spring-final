@@ -3,7 +3,10 @@ package com.spring.ayi.app.controller;
 import com.spring.ayi.app.dto.request.ClientRequest;
 import com.spring.ayi.app.dto.response.ClientResponse;
 import com.spring.ayi.app.dto.response.GenericListPaginationResponse;
+import com.spring.ayi.app.exception.ClientNotFoundException;
 import com.spring.ayi.app.exception.DocumentNumberAlreadyExistException;
+import com.spring.ayi.app.exception.EmptyListException;
+import com.spring.ayi.app.exception.PageDoesNotExistException;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
@@ -34,7 +37,7 @@ public interface IClientController {
             @ApiResponse(code = 400,
                     message = "Describes errors on invalid payload received, e.g: missing fields, invalid data form")
     })
-    ResponseEntity<?> createClient(
+    ResponseEntity<ClientResponse> createClient(
             @ApiParam(value = "data of client", required = true)
             @RequestBody ClientRequest request
     ) throws DocumentNumberAlreadyExistException;
@@ -53,12 +56,12 @@ public interface IClientController {
                     code = 400,
                     message = "Describes errors on invalid payload received, e.g: missing fields, invalid data formats, etc.")
     })
-    ResponseEntity<?> getAllClientsForPage(
+    ResponseEntity<GenericListPaginationResponse<ClientResponse>> getAllClientsForPage(
             @ApiParam(value = "page to display", example = "1")
             @RequestParam(name = "page", defaultValue = "0") Integer page,
             @ApiParam(value = "number of items per request", example = "1")
             @RequestParam(name = "size", defaultValue = "5") Integer size,
-            UriComponentsBuilder uriBuilder);
+            UriComponentsBuilder uriBuilder) throws PageDoesNotExistException, EmptyListException;
 
     @GetMapping(value = "/getClientById/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(
@@ -75,9 +78,9 @@ public interface IClientController {
                     code = 400,
                     message = "Describes errors on invalid payload received, e.g: missing fields, invalid data formats, etc.")
     })
-    ResponseEntity<?> getClientById(
+    ResponseEntity<ClientResponse> getClientById(
             @ApiParam(name = "id", required = true, value = "Client Id", example = "1")
-            @PathVariable("id") Long id);
+            @PathVariable("id") Long id) throws ClientNotFoundException;
 
     @PutMapping(value = "/updateClient/{id}")
     @ApiOperation(
@@ -92,12 +95,12 @@ public interface IClientController {
             @ApiResponse(code = 400,
                     message = "Describes errors on invalid payload received, e.g: missing fields, invalid data form")
     })
-    ResponseEntity<?> updateClient(
+    ResponseEntity<ClientResponse> updateClient(
             @ApiParam(value = "id of client to update", required = true, example = "1")
             @PathVariable(name = "id") Long idClient,
             @ApiParam(value = "data of client", required = true)
             @RequestBody ClientRequest request
-    );
+    ) throws ClientNotFoundException;
 
     @DeleteMapping(value = "/deleteClientById/{id}")
     @ApiOperation(
@@ -113,7 +116,7 @@ public interface IClientController {
                     code = 404,
                     message = "Describes errors on invalid id wich is not found.")
     })
-    ResponseEntity deleteClientById(
+    ResponseEntity<Void> deleteClientById(
             @ApiParam(name = "id", required = true, value = "Client Id", example = "1")
-            @PathVariable("id") Long idClient);
+            @PathVariable("id") Long idClient) throws ClientNotFoundException;
 }
