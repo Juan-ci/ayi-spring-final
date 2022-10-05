@@ -1,7 +1,10 @@
 package com.spring.ayi.app.controller.impl;
 
 import com.spring.ayi.app.dto.response.ErrorResponse;
+import com.spring.ayi.app.exception.AddressNotFoundException;
+import com.spring.ayi.app.exception.ClientNotFoundException;
 import com.spring.ayi.app.exception.DocumentNumberAlreadyExistException;
+import com.spring.ayi.app.exception.DocumentNumberNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -30,5 +33,47 @@ public class GlobalExceptionHandler {
 
         logger.error(response.toString());
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(DocumentNumberNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleDocumentNumberNotFound(DocumentNumberNotFoundException ex) {
+        codeStatus = HttpStatus.NOT_FOUND.value();
+        status = HttpStatus.NOT_FOUND.name();
+        ErrorResponse response = ErrorResponse.builder()
+                .status(status)
+                .code(codeStatus)
+                .message(ex.getMessage())
+                .build();
+
+        logger.error(response.toString());
+        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(ClientNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleClientNotFound(ClientNotFoundException ex) {
+        codeStatus = HttpStatus.NOT_FOUND.value();
+        status = HttpStatus.NOT_FOUND.name();
+        ErrorResponse response = ErrorResponse.builder()
+                .status(status)
+                .code(codeStatus)
+                .message(ex.getMessage())
+                .build();
+
+        logger.error(response.toString());
+        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(AddressNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleAddressNotFound(AddressNotFoundException ex) {
+        codeStatus = HttpStatus.NOT_FOUND.value();
+        status = HttpStatus.NOT_FOUND.name();
+        ErrorResponse response = ErrorResponse.builder()
+                .status(status)
+                .code(codeStatus)
+                .message(ex.getMessage())
+                .build();
+
+        logger.error(response.toString());
+        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
     }
 }
