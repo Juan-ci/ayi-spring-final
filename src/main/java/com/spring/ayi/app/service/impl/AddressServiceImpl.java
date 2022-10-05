@@ -5,6 +5,8 @@ import com.spring.ayi.app.dto.response.AddressResponse;
 import com.spring.ayi.app.dto.response.GenericListPaginationResponse;
 import com.spring.ayi.app.entity.Address;
 import com.spring.ayi.app.entity.Client;
+import com.spring.ayi.app.exception.AddressNotFoundException;
+import com.spring.ayi.app.exception.ClientNotFoundException;
 import com.spring.ayi.app.mapper.IAddressMapper;
 import com.spring.ayi.app.repository.IAddressRepository;
 import com.spring.ayi.app.service.IAddressService;
@@ -18,8 +20,10 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.transaction.Transactional;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
+
+import static com.spring.ayi.app.constants.ExceptionMessages.ExceptionMessages.ADDRESS_ID_NOT_FOUND;
+import static java.text.MessageFormat.format;
 
 @Service
 @AllArgsConstructor
@@ -31,9 +35,16 @@ public class AddressServiceImpl implements IAddressService {
 
     private IClientService clientService;
 
+    /**
+     * It is not allowed to create an address without
+     * an existing client
+     * @param request
+     * @return Address created
+     * @throws ClientNotFoundException
+     */
     @Override
     @Transactional
-    public AddressResponse createAddress(AddressRequest request) throws NoSuchElementException {
+    public AddressResponse createAddress(AddressRequest request) throws ClientNotFoundException {
         Address address = addressMapper.convertDtoToEntity(request);
 
         Client client = clientService.getClientByDocumentNumber(request.getClientDocumentNumber());
@@ -103,32 +114,41 @@ public class AddressServiceImpl implements IAddressService {
 
     @Override
     @Transactional
-    public AddressResponse getOneAddressById(Long idAddress) throws NoSuchElementException {
+    public AddressResponse getOneAddressById(Long idAddress) throws AddressNotFoundException {
         Address address = this.getAddressById(idAddress);
         return addressMapper.convertEntityToDto(address);
     }
 
     @Override
     @Transactional
-    public AddressResponse updateAddress(Long idAddress, AddressRequest request) throws NoSuchElementException {
+    public AddressResponse updateAddress(Long idAddress, AddressRequest request) throws AddressNotFoundException {
         Address addressToUpdate = this.getAddressById(idAddress);
 
-        return addressMapper.convertEntityToDto(addressToUpdate);
+        addressToUpdate.setCountry(request.getCountry());
+        addressToUpdate.setCity(request.getCity());
+        addressToUpdate.setDistrict(request.getDistrict());
+        addressToUpdate.setFloor(request.getFloor());
+        addressToUpdate.setStreet(request.getStreet());
+        addressToUpdate.setStreetNumber(request.getStreetNumber());
+        addressToUpdate.setPostalCode(request.getPostalCode());
+
+        Address addressUpdated = addressRepository.save(addressToUpdate);
+
+        return addressMapper.convertEntityToDto(addressUpdated);
     }
 
     @Override
     @Transactional
-    public void deleteAddressById(Long idAddress) throws NoSuchElementException {
+    public void deleteAddressById(Long idAddress) throws AddressNotFoundException {
         Address address = this.getAddressById(idAddress);
 
         address.setSoftDelete(Boolean.TRUE);
         addressRepository.save(address);
     }
 
-    private Address getAddressById(Long idAddress) throws NoSuchElementException {
-        //  Create custom exception
+    private Address getAddressById(Long idAddress) throws AddressNotFoundException {
         return addressRepository.findById(idAddress)
-                .orElseThrow(() -> new NoSuchElementException("Client detail id " + idAddress + " not found."));
+                .orElseThrow(() -> new AddressNotFoundException(format(ADDRESS_ID_NOT_FOUND, idAddress)));
     }
 
     private String constructPrevPageUri(UriComponentsBuilder uriBuilder, int pageReq) {
