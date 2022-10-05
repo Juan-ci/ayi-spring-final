@@ -3,6 +3,7 @@ package com.spring.ayi.app.controller;
 import com.spring.ayi.app.dto.request.ClientRequest;
 import com.spring.ayi.app.dto.response.ClientResponse;
 import com.spring.ayi.app.dto.response.GenericListPaginationResponse;
+import com.spring.ayi.app.exception.DocumentNumberAlreadyExistException;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.util.UriComponentsBuilder;
 
 public interface IClientController {
+
     @PostMapping(value = "/create-client", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(
             value = "Retrieves a client created",
@@ -35,7 +37,7 @@ public interface IClientController {
     ResponseEntity<?> createClient(
             @ApiParam(value = "data of client", required = true)
             @RequestBody ClientRequest request
-    );
+    ) throws DocumentNumberAlreadyExistException;
 
     @GetMapping(value = "/getAllClients", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(
@@ -92,7 +94,7 @@ public interface IClientController {
     })
     ResponseEntity<?> updateClient(
             @ApiParam(value = "id of client to update", required = true, example = "1")
-            @PathVariable(name = "id") Long idPerson,
+            @PathVariable(name = "id") Long idClient,
             @ApiParam(value = "data of client", required = true)
             @RequestBody ClientRequest request
     );
@@ -111,7 +113,7 @@ public interface IClientController {
                     code = 404,
                     message = "Describes errors on invalid id wich is not found.")
     })
-    public ResponseEntity deleteClientById(
+    ResponseEntity deleteClientById(
             @ApiParam(name = "id", required = true, value = "Client Id", example = "1")
-            @PathVariable("id") Long id);
+            @PathVariable("id") Long idClient);
 }

@@ -8,6 +8,8 @@ import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
+import java.util.function.Function;
+
 @Component
 @AllArgsConstructor
 public class ClientDetailMapperImpl implements IClientDetailMapper {

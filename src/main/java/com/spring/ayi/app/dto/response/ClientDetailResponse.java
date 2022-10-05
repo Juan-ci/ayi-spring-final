@@ -1,5 +1,7 @@
 package com.spring.ayi.app.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
@@ -28,4 +30,8 @@ public class ClientDetailResponse implements Serializable {
 
     @ApiModelProperty(position = 3, notes = "Acumulated points of the client.")
     private Long acumulatedPoints;
+
+    @ApiModelProperty(position = 4, notes = "Client who belongs the details.")
+    @JsonIgnoreProperties(value = "clientDetail")
+    private ClientResponse client;
 }

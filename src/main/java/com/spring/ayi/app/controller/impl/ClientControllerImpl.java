@@ -4,6 +4,7 @@ import com.spring.ayi.app.controller.IClientController;
 import com.spring.ayi.app.dto.request.ClientRequest;
 import com.spring.ayi.app.dto.response.ClientResponse;
 import com.spring.ayi.app.dto.response.GenericListPaginationResponse;
+import com.spring.ayi.app.exception.DocumentNumberAlreadyExistException;
 import com.spring.ayi.app.service.IClientService;
 import io.swagger.annotations.Api;
 import lombok.AllArgsConstructor;
@@ -23,7 +24,7 @@ public class ClientControllerImpl implements IClientController {
     private IClientService clientService;
 
     @Override
-    public ResponseEntity<?> createClient(@RequestBody ClientRequest request) {
+    public ResponseEntity<?> createClient(@RequestBody ClientRequest request) throws DocumentNumberAlreadyExistException  {
         ClientResponse response = clientService.createClient(request);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
@@ -35,20 +36,20 @@ public class ClientControllerImpl implements IClientController {
     }
 
     @Override
-    public ResponseEntity<?> getClientById(Long id) {
-        ClientResponse response = clientService.getOneClientById(id);
+    public ResponseEntity<?> getClientById(Long idClient) {
+        ClientResponse response = clientService.getOneClientById(idClient);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @Override
-    public ResponseEntity<?> updateClient(Long idPerson, ClientRequest request) {
-        ClientResponse response = clientService.updateClient(idPerson, request);
+    public ResponseEntity<?> updateClient(Long idClient, ClientRequest request) {
+        ClientResponse response = clientService.updateClient(idClient, request);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @Override
-    public ResponseEntity deleteClientById(Long id) {
-        clientService.deleteClientById(id);
+    public ResponseEntity deleteClientById(Long idClient) {
+        clientService.deleteClientById(idClient);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

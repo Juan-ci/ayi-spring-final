@@ -1,6 +1,7 @@
 package com.spring.ayi.app.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
@@ -35,8 +36,10 @@ public class ClientResponse implements Serializable {
     private String documentNumber;
 
     @ApiModelProperty(position = 5, notes = "The client detail.")
+    @JsonIgnoreProperties(value = "client")
     private ClientDetailResponse clientDetail;
 
+    @JsonIgnoreProperties(value = "client")
     @ApiModelProperty(position = 6, notes = "The addresses of the client.")
     private List<AddressResponse> addresses;
 

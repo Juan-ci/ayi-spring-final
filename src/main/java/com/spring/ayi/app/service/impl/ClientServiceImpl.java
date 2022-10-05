@@ -6,6 +6,9 @@ import com.spring.ayi.app.dto.response.GenericListPaginationResponse;
 import com.spring.ayi.app.entity.Address;
 import com.spring.ayi.app.entity.Client;
 import com.spring.ayi.app.entity.ClientDetail;
+import com.spring.ayi.app.exception.ClientNotFoundException;
+import com.spring.ayi.app.exception.DocumentNumberAlreadyExistException;
+import com.spring.ayi.app.exception.DocumentNumberNotFoundException;
 import com.spring.ayi.app.mapper.IClientMapper;
 import com.spring.ayi.app.repository.IClientRepository;
 import com.spring.ayi.app.service.IClientService;
@@ -18,8 +21,12 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.transaction.Transactional;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
+
+import static com.spring.ayi.app.constants.ExceptionMessages.ExceptionMessages.CLIENT_ID_NOT_FOUND;
+import static com.spring.ayi.app.constants.ExceptionMessages.ExceptionMessages.DOCUMENT_ALREADY_EXIST;
+import static com.spring.ayi.app.constants.ExceptionMessages.ExceptionMessages.DOCUMENT_NUMBER_NOT_FOUND;
+import static java.text.MessageFormat.format;
 
 @Service
 @AllArgsConstructor
@@ -31,23 +38,28 @@ public class ClientServiceImpl implements IClientService {
 
     @Override
     @Transactional
-    public ClientResponse createClient(ClientRequest request) {
+    public ClientResponse createClient(ClientRequest request) throws DocumentNumberAlreadyExistException {
         Client client = clientMapper.convertDtoToEntity(request);
         ClientDetail clientDetail = client.getClientDetail();
+        String documentNumber = client.getDocumentNumber();
         List<Address> address = client.getAddresses();
 
-        if (address != null && address.size() > 0) {
-            Client finalClient = client;
-            address.forEach(addr -> {
-                addr.setClient(finalClient);
-            });
+        if (!clientRepository.existsByDocumentNumber(documentNumber)) {
+            if (address != null && address.size() > 0) {
+                Client finalClient = client;
+                address.forEach(addr -> {
+                    addr.setClient(finalClient);
+                });
+            }
+
+            clientDetail.setClient(client);
+            client.setAddresses(address);
+            client = clientRepository.save(client);
+
+            return clientMapper.convertEntityToDto(client);
+        } else {
+            throw new DocumentNumberAlreadyExistException(format(DOCUMENT_ALREADY_EXIST, documentNumber));
         }
-
-        clientDetail.setClient(client);
-        client.setAddresses(address);
-        client = clientRepository.save(client);
-
-        return clientMapper.convertEntityToDto(client);
     }
 
     @Override
@@ -106,7 +118,7 @@ public class ClientServiceImpl implements IClientService {
 
     @Override
     @Transactional
-    public ClientResponse getOneClientById(Long idClient) throws NoSuchElementException{
+    public ClientResponse getOneClientById(Long idClient) throws ClientNotFoundException {
         Client client = this.getClientById(idClient);
 
         return clientMapper.convertEntityToDto(client);
@@ -114,7 +126,7 @@ public class ClientServiceImpl implements IClientService {
 
     @Override
     @Transactional
-    public ClientResponse updateClient(Long id, ClientRequest request) throws NoSuchElementException {
+    public ClientResponse updateClient(Long id, ClientRequest request) throws ClientNotFoundException {
         /**
          * No se agregan facturas ya que se actualiza el cliente cuando se crean nuevas facturas
          */
@@ -160,7 +172,7 @@ public class ClientServiceImpl implements IClientService {
 
     @Override
     @Transactional
-    public void deleteClientById(Long idClient) throws NoSuchElementException {
+    public void deleteClientById(Long idClient) throws ClientNotFoundException {
         Client clientToDelete = this.getClientById(idClient);
 
         clientToDelete.setSoftDelete(Boolean.TRUE);
@@ -168,10 +180,20 @@ public class ClientServiceImpl implements IClientService {
         clientRepository.save(clientToDelete);
     }
 
-    private Client getClientById(Long id) throws NoSuchElementException {
+    @Override
+    @Transactional
+    public Client getClientByDocumentNumber(String documentNumber) throws DocumentNumberNotFoundException {
+        return clientRepository
+                .findByDocumentNumber(documentNumber)
+                .orElseThrow(
+                        () -> new DocumentNumberNotFoundException(format(DOCUMENT_NUMBER_NOT_FOUND, documentNumber))
+                );
+    }
+
+    private Client getClientById(Long id) throws ClientNotFoundException {
         return clientRepository.findById(id)
                 .orElseThrow(
-                        () -> new NoSuchElementException("EL ID " + id + " NO EXISTE.")
+                        () -> new ClientNotFoundException(format(CLIENT_ID_NOT_FOUND, id))
                 );
     }
 
