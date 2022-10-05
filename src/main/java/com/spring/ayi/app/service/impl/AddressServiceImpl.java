@@ -7,6 +7,9 @@ import com.spring.ayi.app.entity.Address;
 import com.spring.ayi.app.entity.Client;
 import com.spring.ayi.app.exception.AddressNotFoundException;
 import com.spring.ayi.app.exception.ClientNotFoundException;
+import com.spring.ayi.app.exception.DocumentNumberNotFoundException;
+import com.spring.ayi.app.exception.EmptyListException;
+import com.spring.ayi.app.exception.PageDoesNotExistException;
 import com.spring.ayi.app.mapper.IAddressMapper;
 import com.spring.ayi.app.repository.IAddressRepository;
 import com.spring.ayi.app.service.IAddressService;
@@ -23,6 +26,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static com.spring.ayi.app.constants.ExceptionMessages.ExceptionMessages.ADDRESS_ID_NOT_FOUND;
+import static com.spring.ayi.app.constants.ExceptionMessages.ExceptionMessages.EMPTY_LIST_EXCEPTION;
+import static com.spring.ayi.app.constants.ExceptionMessages.ExceptionMessages.PAGE_DOES_NOT_EXIST;
 import static java.text.MessageFormat.format;
 
 @Service
@@ -35,21 +40,24 @@ public class AddressServiceImpl implements IAddressService {
 
     private IClientService clientService;
 
+    private final String LIST_EMPTY_TYPE = "ADDRESSES";
+
     /**
      * It is not allowed to create an address without
      * an existing client
+     *
      * @param request
      * @return Address created
      * @throws ClientNotFoundException
      */
     @Override
     @Transactional
-    public AddressResponse createAddress(AddressRequest request) throws ClientNotFoundException {
+    public AddressResponse createAddress(AddressRequest request) throws ClientNotFoundException, DocumentNumberNotFoundException {
         Address address = addressMapper.convertDtoToEntity(request);
 
         Client client = clientService.getClientByDocumentNumber(request.getClientDocumentNumber());
 
-        if( client != null) {
+        if (client != null) {
             client.getAddresses().add(address);
             address.setClient(client);
             address = addressRepository.save(address);
@@ -62,7 +70,8 @@ public class AddressServiceImpl implements IAddressService {
     public GenericListPaginationResponse<AddressResponse> getAllAddress(String uri,
                                                                         int pageReq,
                                                                         Integer size,
-                                                                        UriComponentsBuilder uriBuilder) {
+                                                                        UriComponentsBuilder uriBuilder)
+            throws PageDoesNotExistException, EmptyListException {
         GenericListPaginationResponse<AddressResponse> addressPagesResponse = new GenericListPaginationResponse<>();
         Pageable pageable = PageRequest.of(pageReq, size);
         Page<Address> addressPage = addressRepository.findAll(pageable);
@@ -104,11 +113,9 @@ public class AddressServiceImpl implements IAddressService {
 
             return addressPagesResponse;
         } else if (pageReq > addressPage.getTotalPages()) {
-            //  Crear custom exception
-            throw new RuntimeException("No existe la página " + pageReq);
+            throw new PageDoesNotExistException(format(PAGE_DOES_NOT_EXIST, pageReq, size));
         } else {
-            // Crear custom exception
-            throw new RuntimeException("No hay registros en address pára mostrar.");
+            throw new EmptyListException(format(EMPTY_LIST_EXCEPTION, LIST_EMPTY_TYPE));
         }
     }
 
@@ -148,7 +155,9 @@ public class AddressServiceImpl implements IAddressService {
 
     private Address getAddressById(Long idAddress) throws AddressNotFoundException {
         return addressRepository.findById(idAddress)
-                .orElseThrow(() -> new AddressNotFoundException(format(ADDRESS_ID_NOT_FOUND, idAddress)));
+                .orElseThrow(
+                        () -> new AddressNotFoundException(format(ADDRESS_ID_NOT_FOUND, idAddress))
+                );
     }
 
     private String constructPrevPageUri(UriComponentsBuilder uriBuilder, int pageReq) {

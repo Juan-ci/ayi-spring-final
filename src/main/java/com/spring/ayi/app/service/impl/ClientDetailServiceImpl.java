@@ -5,9 +5,14 @@ import com.spring.ayi.app.dto.response.ClientDetailResponse;
 import com.spring.ayi.app.dto.response.GenericListPaginationResponse;
 import com.spring.ayi.app.entity.Client;
 import com.spring.ayi.app.entity.ClientDetail;
+import com.spring.ayi.app.exception.ClientDetailNotFoundException;
+import com.spring.ayi.app.exception.DocumentNumberNotFoundException;
+import com.spring.ayi.app.exception.EmptyListException;
+import com.spring.ayi.app.exception.PageDoesNotExistException;
 import com.spring.ayi.app.mapper.IClientDetailMapper;
 import com.spring.ayi.app.repository.IClientDetailRepository;
 import com.spring.ayi.app.service.IClientDetailService;
+import com.spring.ayi.app.service.IClientService;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -17,8 +22,12 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.transaction.Transactional;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
+
+import static com.spring.ayi.app.constants.ExceptionMessages.ExceptionMessages.CLIENT_DETAIL_ID_NOT_FOUND;
+import static com.spring.ayi.app.constants.ExceptionMessages.ExceptionMessages.EMPTY_LIST_EXCEPTION;
+import static com.spring.ayi.app.constants.ExceptionMessages.ExceptionMessages.PAGE_DOES_NOT_EXIST;
+import static java.text.MessageFormat.format;
 
 @Service
 @AllArgsConstructor
@@ -28,24 +37,44 @@ public class ClientDetailServiceImpl implements IClientDetailService {
 
     private IClientDetailMapper clientDetailMapper;
 
+    private IClientService clientService;
+
+    private static final String LIST_TYPE_EXCEPTION = "CLIENT DETAILS";
+
+    /**
+     * It is not allowed to create a client detail
+     * without an existing client previously
+     * 
+     * @param request
+     * @return
+     * @throws DocumentNumberNotFoundException
+     */
     @Override
     @Transactional
-    public ClientDetailResponse createClientDetail(ClientDetailRequest request) {
+    public ClientDetailResponse createClientDetail(ClientDetailRequest request)
+            throws DocumentNumberNotFoundException {
         ClientDetail clientDetail = clientDetailMapper.convertDtoToEntity(request);
-        Client client = clientDetail.getClient();
 
-        clientDetail.setClient(client);
-        clientDetail = clientDetailRepository.save(clientDetail);
+        Client client = clientService.getClientByDocumentNumber(request.getClientDocumentNumber());
 
+        if (client != null) {
+            client.setClientDetail(clientDetail);
+            clientDetail.setClient(client);
+            clientDetail = clientDetailRepository.save(clientDetail);
+
+        }
         return clientDetailMapper.convertEntityToDto(clientDetail);
     }
 
     @Override
     @Transactional
-    public GenericListPaginationResponse<ClientDetailResponse> getAllClientDetail(String uri,
-                                                                                  int pageReq,
-                                                                                  Integer size,
-                                                                                  UriComponentsBuilder uriBuilder) {
+    public GenericListPaginationResponse<ClientDetailResponse> getAllClientDetail
+            (
+                    String uri,
+                    int pageReq,
+                    Integer size,
+                    UriComponentsBuilder uriBuilder
+            ) throws PageDoesNotExistException, EmptyListException {
         GenericListPaginationResponse<ClientDetailResponse> clientDetailPagesResponse = new GenericListPaginationResponse<>();
         Pageable pageable = PageRequest.of(pageReq, size);
         Page<ClientDetail> clientDetailPage = clientDetailRepository.findAll(pageable);
@@ -87,24 +116,23 @@ public class ClientDetailServiceImpl implements IClientDetailService {
 
             return clientDetailPagesResponse;
         } else if (pageReq > clientDetailPage.getTotalPages()) {
-            //  Crear custom exception
-            throw new RuntimeException("No existe la página " + pageReq);
+            throw new PageDoesNotExistException(format(PAGE_DOES_NOT_EXIST, pageReq, size));
         } else {
-            // Crear custom exception
-            throw new RuntimeException("No hay registros en client detail pára mostrar.");
+            throw new EmptyListException(format(EMPTY_LIST_EXCEPTION, LIST_TYPE_EXCEPTION));
         }
     }
 
     @Override
     @Transactional
-    public ClientDetailResponse getOneClientDetailById(Long idClientDetail) throws NoSuchElementException {
+    public ClientDetailResponse getOneClientDetailById(Long idClientDetail) throws ClientDetailNotFoundException {
         ClientDetail clientDetail = this.getClientDetailById(idClientDetail);
         return clientDetailMapper.convertEntityToDto(clientDetail);
     }
 
     @Override
     @Transactional
-    public ClientDetailResponse updateClientDetail(Long idClientDetail, ClientDetailRequest request) throws NoSuchElementException {
+    public ClientDetailResponse updateClientDetail(Long idClientDetail, ClientDetailRequest request)
+            throws ClientDetailNotFoundException {
         ClientDetail clientDetailToUpdate = this.getClientDetailById(idClientDetail);
 
         clientDetailToUpdate.setPrime(request.getPrime());
@@ -117,17 +145,19 @@ public class ClientDetailServiceImpl implements IClientDetailService {
 
     @Override
     @Transactional
-    public void deleteClientDetailById(Long idClientDetail) throws NoSuchElementException {
+    public void deleteClientDetailById(Long idClientDetail) throws ClientDetailNotFoundException {
         ClientDetail clientDetail = this.getClientDetailById(idClientDetail);
 
         clientDetail.setSoftDelete(Boolean.TRUE);
         clientDetailRepository.save(clientDetail);
     }
 
-    private ClientDetail getClientDetailById(Long idClientDetail) throws NoSuchElementException {
-        //  Create custom exception
-        return clientDetailRepository.findById(idClientDetail)
-                .orElseThrow(() -> new RuntimeException("Client detail id " + idClientDetail + " not found."));
+    private ClientDetail getClientDetailById(Long idClientDetail) throws ClientDetailNotFoundException {
+        return clientDetailRepository
+                .findById(idClientDetail)
+                .orElseThrow(
+                        () -> new ClientDetailNotFoundException(format(CLIENT_DETAIL_ID_NOT_FOUND, idClientDetail))
+                );
     }
 
     private String constructPrevPageUri(UriComponentsBuilder uriBuilder, int pageReq) {

@@ -3,6 +3,10 @@ package com.spring.ayi.app.controller;
 import com.spring.ayi.app.dto.request.ClientDetailRequest;
 import com.spring.ayi.app.dto.response.ClientDetailResponse;
 import com.spring.ayi.app.dto.response.GenericListPaginationResponse;
+import com.spring.ayi.app.exception.ClientDetailNotFoundException;
+import com.spring.ayi.app.exception.DocumentNumberNotFoundException;
+import com.spring.ayi.app.exception.EmptyListException;
+import com.spring.ayi.app.exception.PageDoesNotExistException;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
@@ -20,7 +24,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 public interface IClientDetailController {
 
-    @PostMapping(path = "/createClientDetail",consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(path = "/createClientDetail", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(
             value = "Retrieves a client detail created",
             httpMethod = "POST",
@@ -33,10 +37,10 @@ public interface IClientDetailController {
             @ApiResponse(code = 400,
                     message = "Describes errors on invalid payload received, e.g: missing fields, invalid data form")
     })
-    ResponseEntity<?> createClientDetail(
+    ResponseEntity<ClientDetailResponse> createClientDetail(
             @ApiParam(value = "data of client detail", required = true)
             @RequestBody ClientDetailRequest request
-    );
+    ) throws DocumentNumberNotFoundException;
 
     @GetMapping(value = "/getAllClientDetails", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(
@@ -52,12 +56,14 @@ public interface IClientDetailController {
                     code = 400,
                     message = "Describes errors on invalid payload received, e.g: missing fields, invalid data formats, etc.")
     })
-    ResponseEntity<?> getAllClientDetailsForPage(
-            @ApiParam(value = "page to display", example = "1")
-            @RequestParam(name = "page", defaultValue = "0") Integer page,
-            @ApiParam(value = "number of items per request", example = "1")
-            @RequestParam(name = "size", defaultValue = "5") Integer size,
-            UriComponentsBuilder uriBuilder);
+    ResponseEntity<GenericListPaginationResponse<ClientDetailResponse>> getAllClientDetailsForPage
+            (
+                    @ApiParam(value = "page to display", example = "1")
+                    @RequestParam(name = "page", defaultValue = "0") Integer page,
+                    @ApiParam(value = "number of items per request", example = "1")
+                    @RequestParam(name = "size", defaultValue = "5") Integer size,
+                    UriComponentsBuilder uriBuilder
+            ) throws PageDoesNotExistException, EmptyListException;
 
     @GetMapping(value = "/getClientDetailById/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(
@@ -74,9 +80,11 @@ public interface IClientDetailController {
                     code = 400,
                     message = "Describes errors on invalid payload received, e.g: missing fields, invalid data formats, etc.")
     })
-    ResponseEntity<?> getClientDetailById(
-            @ApiParam(name = "id", required = true, value = "Client detail Id", example = "1")
-            @PathVariable("id") Long id);
+    ResponseEntity<ClientDetailResponse> getClientDetailById
+            (
+                    @ApiParam(name = "id", required = true, value = "Client detail Id", example = "1")
+                    @PathVariable("id") Long id
+            ) throws ClientDetailNotFoundException;
 
     @PutMapping(value = "/updateClientDetail/{id}")
     @ApiOperation(
@@ -91,12 +99,13 @@ public interface IClientDetailController {
             @ApiResponse(code = 400,
                     message = "Describes errors on invalid payload received, e.g: missing fields, invalid data form")
     })
-    ResponseEntity<?> updateClientDetail(
-            @ApiParam(value = "id of client detail to update", required = true, example = "1")
-            @PathVariable(name = "id") Long idClientDetail,
-            @ApiParam(value = "data of client", required = true)
-            @RequestBody ClientDetailRequest request
-    );
+    ResponseEntity<ClientDetailResponse> updateClientDetail
+            (
+                    @ApiParam(value = "id of client detail to update", required = true, example = "1")
+                    @PathVariable(name = "id") Long idClientDetail,
+                    @ApiParam(value = "data of client", required = true)
+                    @RequestBody ClientDetailRequest request
+            ) throws ClientDetailNotFoundException;
 
     @DeleteMapping(value = "/deleteClientDetailById/{id}")
     @ApiOperation(
@@ -112,7 +121,9 @@ public interface IClientDetailController {
                     code = 404,
                     message = "Describes errors on invalid id wich is not found.")
     })
-    ResponseEntity deleteClientDetailById(
-            @ApiParam(name = "id", required = true, value = "Client detail Id", example = "1")
-            @PathVariable("id") Long idClientDetail);
+    ResponseEntity<Void> deleteClientDetailById
+            (
+                    @ApiParam(name = "id", required = true, value = "Client detail Id", example = "1")
+                    @PathVariable("id") Long idClientDetail
+            ) throws ClientDetailNotFoundException;
 }

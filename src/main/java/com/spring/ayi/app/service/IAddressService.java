@@ -5,21 +5,29 @@ import com.spring.ayi.app.dto.response.AddressResponse;
 import com.spring.ayi.app.dto.response.GenericListPaginationResponse;
 import com.spring.ayi.app.exception.AddressNotFoundException;
 import com.spring.ayi.app.exception.ClientNotFoundException;
+import com.spring.ayi.app.exception.DocumentNumberNotFoundException;
+import com.spring.ayi.app.exception.EmptyListException;
+import com.spring.ayi.app.exception.PageDoesNotExistException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.transaction.Transactional;
-import java.util.NoSuchElementException;
 
 @Service
 public interface IAddressService {
-    AddressResponse createAddress(AddressRequest request) throws ClientNotFoundException;
 
     @Transactional
-    GenericListPaginationResponse<AddressResponse> getAllAddress(String uri,
-                                                                 int pageReq,
-                                                                 Integer size,
-                                                                 UriComponentsBuilder uriBuilder);
+    AddressResponse createAddress(AddressRequest request) throws ClientNotFoundException, DocumentNumberNotFoundException;
+
+    @Transactional
+    GenericListPaginationResponse<AddressResponse> getAllAddress
+            (
+                    String uri,
+                    int pageReq,
+                    Integer size,
+                    UriComponentsBuilder uriBuilder
+            )
+            throws PageDoesNotExistException, EmptyListException;
 
     @Transactional
     AddressResponse getOneAddressById(Long idAddress) throws AddressNotFoundException;

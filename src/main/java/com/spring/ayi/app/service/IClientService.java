@@ -7,18 +7,22 @@ import com.spring.ayi.app.entity.Client;
 import com.spring.ayi.app.exception.ClientNotFoundException;
 import com.spring.ayi.app.exception.DocumentNumberAlreadyExistException;
 import com.spring.ayi.app.exception.DocumentNumberNotFoundException;
+import com.spring.ayi.app.exception.EmptyListException;
+import com.spring.ayi.app.exception.PageDoesNotExistException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.transaction.Transactional;
-import java.util.NoSuchElementException;
 
 @Service
 public interface IClientService {
+
+    @Transactional
     ClientResponse createClient(ClientRequest request) throws DocumentNumberAlreadyExistException;
 
     @Transactional
-    GenericListPaginationResponse<ClientResponse> getClientPage(String uri, int pageReq, Integer size, UriComponentsBuilder uriBuilder);
+    GenericListPaginationResponse<ClientResponse> getClientPage(String uri, int pageReq, Integer size, UriComponentsBuilder uriBuilder)
+            throws PageDoesNotExistException, EmptyListException;
 
     @Transactional
     ClientResponse getOneClientById(Long idClient) throws ClientNotFoundException;

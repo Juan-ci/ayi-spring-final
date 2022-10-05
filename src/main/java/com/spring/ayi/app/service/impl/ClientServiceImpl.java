@@ -9,6 +9,8 @@ import com.spring.ayi.app.entity.ClientDetail;
 import com.spring.ayi.app.exception.ClientNotFoundException;
 import com.spring.ayi.app.exception.DocumentNumberAlreadyExistException;
 import com.spring.ayi.app.exception.DocumentNumberNotFoundException;
+import com.spring.ayi.app.exception.EmptyListException;
+import com.spring.ayi.app.exception.PageDoesNotExistException;
 import com.spring.ayi.app.mapper.IClientMapper;
 import com.spring.ayi.app.repository.IClientRepository;
 import com.spring.ayi.app.service.IClientService;
@@ -26,6 +28,8 @@ import java.util.stream.Collectors;
 import static com.spring.ayi.app.constants.ExceptionMessages.ExceptionMessages.CLIENT_ID_NOT_FOUND;
 import static com.spring.ayi.app.constants.ExceptionMessages.ExceptionMessages.DOCUMENT_ALREADY_EXIST;
 import static com.spring.ayi.app.constants.ExceptionMessages.ExceptionMessages.DOCUMENT_NUMBER_NOT_FOUND;
+import static com.spring.ayi.app.constants.ExceptionMessages.ExceptionMessages.EMPTY_LIST_EXCEPTION;
+import static com.spring.ayi.app.constants.ExceptionMessages.ExceptionMessages.PAGE_DOES_NOT_EXIST;
 import static java.text.MessageFormat.format;
 
 @Service
@@ -35,6 +39,8 @@ public class ClientServiceImpl implements IClientService {
     private IClientRepository clientRepository;
 
     private IClientMapper clientMapper;
+
+    private static final String LIST_TYPE_EXCEPTION = "CLIENTS";
 
     @Override
     @Transactional
@@ -67,12 +73,13 @@ public class ClientServiceImpl implements IClientService {
     public GenericListPaginationResponse<ClientResponse> getClientPage(String uri,
                                                                        int pageReq,
                                                                        Integer size,
-                                                                       UriComponentsBuilder uriBuilder) {
+                                                                       UriComponentsBuilder uriBuilder)
+            throws PageDoesNotExistException, EmptyListException {
         GenericListPaginationResponse<ClientResponse> clientPagesResponse = new GenericListPaginationResponse<>();
         Pageable pageable = PageRequest.of(pageReq, size);
         Page<Client> clientPages = clientRepository.findAll(pageable);
 
-        if(clientPages != null && !clientPages.isEmpty() && !(pageReq > clientPages.getTotalPages())) {
+        if (clientPages != null && !clientPages.isEmpty() && !(pageReq > clientPages.getTotalPages())) {
             List<ClientResponse> clientContent = clientPages
                     .map(client -> clientMapper.convertEntityToDto(client))
                     .stream()
@@ -92,7 +99,7 @@ public class ClientServiceImpl implements IClientService {
              * If page is equal to 0, then
              * there is no previous page
              */
-            if (pageable.getPageNumber() == 0 ) {
+            if (pageable.getPageNumber() == 0) {
                 prevPage = null;
             }
 
@@ -100,7 +107,7 @@ public class ClientServiceImpl implements IClientService {
              * If page is equal to the last page, then
              *  there is no next page
              */
-            if (pageable.getPageNumber() == clientPages.getTotalPages() -1 ) {
+            if (pageable.getPageNumber() == clientPages.getTotalPages() - 1) {
                 nextPage = null;
             }
 
@@ -109,10 +116,9 @@ public class ClientServiceImpl implements IClientService {
 
             return clientPagesResponse;
         } else if (pageReq > clientPages.getTotalPages()) {
-            throw new RuntimeException("No existe la pagina " + pageReq);
+            throw new PageDoesNotExistException(format(PAGE_DOES_NOT_EXIST, pageReq, size));
         } else {
-            //  AGREGAR CUSTOM EXCEPTION
-            throw new RuntimeException("No hay clientes para mostrar.");
+            throw new EmptyListException(format(EMPTY_LIST_EXCEPTION, LIST_TYPE_EXCEPTION));
         }
     }
 
@@ -130,7 +136,6 @@ public class ClientServiceImpl implements IClientService {
         /**
          * No se agregan facturas ya que se actualiza el cliente cuando se crean nuevas facturas
          */
-
         Client dataToUpdate = clientMapper.convertDtoToEntity(request);
         Client clientToUpdate = this.getClientById(id);
 
@@ -151,20 +156,25 @@ public class ClientServiceImpl implements IClientService {
         clientToUpdate.setLastname(dataToUpdate.getLastname());
 
         List<Address> newAddresses = dataToUpdate.getAddresses();
-        if( newAddresses != null && !newAddresses.isEmpty()) {
-            // Get the old addresses
+        if (newAddresses != null && !newAddresses.isEmpty()) {
+            /**
+             * Get the old addresses
+              */
             List<Address> currentAddresses = clientToUpdate.getAddresses();
 
             Client finalClientToUpdate = clientToUpdate;
             newAddresses.forEach(address -> {
-                // Add the new addresses
+                /**
+                 *  Add the new addresses
+                 */
                 address.setClient(finalClientToUpdate);
                 currentAddresses.add(address);
             });
-            // Set the new list of addresses
+            /**
+             *  Set the new list of addresses
+             */
             clientToUpdate.setAddresses(currentAddresses);
         }
-
         clientToUpdate = clientRepository.save(clientToUpdate);
 
         return clientMapper.convertEntityToDto(clientToUpdate);
@@ -190,10 +200,11 @@ public class ClientServiceImpl implements IClientService {
                 );
     }
 
-    private Client getClientById(Long id) throws ClientNotFoundException {
-        return clientRepository.findById(id)
+    private Client getClientById(Long idClient) throws ClientNotFoundException {
+        return clientRepository
+                .findById(idClient)
                 .orElseThrow(
-                        () -> new ClientNotFoundException(format(CLIENT_ID_NOT_FOUND, id))
+                        () -> new ClientNotFoundException(format(CLIENT_ID_NOT_FOUND, idClient))
                 );
     }
 
