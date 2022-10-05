@@ -1,5 +1,6 @@
 package com.spring.ayi.app.dto.request;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
@@ -44,10 +45,12 @@ public class ClientRequest implements Serializable {
 
     @NotNull(message = "Client detail can not be null.")
     @ApiModelProperty(position = 4, required = true, notes = "Non empty value, The client detail is required.")
+    @JsonIgnoreProperties(value = "clientDocumentNumber")
     private ClientDetailRequest clientDetail;
 
     @NotNull(message = "Address can not be null.")
     @NotBlank(message = "Address can not be blank.")
     @ApiModelProperty(position = 5, required = true, notes = "Non empty value, The address is required.")
+    @JsonIgnoreProperties(value = "clientDocumentNumber")
     private List<AddressRequest> addresses;
 }

@@ -76,7 +76,7 @@ public class AddressServiceImpl implements IAddressService {
         Pageable pageable = PageRequest.of(pageReq, size);
         Page<Address> addressPage = addressRepository.findAll(pageable);
 
-        if (addressPage != null && !addressPage.isEmpty() && !(pageReq > addressPage.getTotalPages())) {
+        if (addressPage != null && !addressPage.isEmpty() && !(pageReq > addressPage.getTotalPages() - 1 )) {
             List<AddressResponse> addressContent = addressPage.map(
                             address -> addressMapper.convertEntityToDto(address)
                     ).stream()
@@ -112,7 +112,7 @@ public class AddressServiceImpl implements IAddressService {
             addressPagesResponse.setNextPage(nextPage);
 
             return addressPagesResponse;
-        } else if (pageReq > addressPage.getTotalPages()) {
+        } else if (pageReq > addressPage.getTotalPages() - 1) {
             throw new PageDoesNotExistException(format(PAGE_DOES_NOT_EXIST, pageReq, size));
         } else {
             throw new EmptyListException(format(EMPTY_LIST_EXCEPTION, LIST_EMPTY_TYPE));

@@ -79,7 +79,7 @@ public class ClientDetailServiceImpl implements IClientDetailService {
         Pageable pageable = PageRequest.of(pageReq, size);
         Page<ClientDetail> clientDetailPage = clientDetailRepository.findAll(pageable);
 
-        if (clientDetailPage != null && !clientDetailPage.isEmpty() && !(pageReq > clientDetailPage.getTotalPages())) {
+        if (clientDetailPage != null && !clientDetailPage.isEmpty() && !(pageReq > clientDetailPage.getTotalPages() - 1)) {
             List<ClientDetailResponse> clientDetailContent = clientDetailPage.map(
                             clientDetail -> clientDetailMapper.convertEntityToDto(clientDetail)
                     ).stream()
@@ -115,7 +115,7 @@ public class ClientDetailServiceImpl implements IClientDetailService {
             clientDetailPagesResponse.setNextPage(nextPage);
 
             return clientDetailPagesResponse;
-        } else if (pageReq > clientDetailPage.getTotalPages()) {
+        } else if (pageReq > clientDetailPage.getTotalPages() - 1) {
             throw new PageDoesNotExistException(format(PAGE_DOES_NOT_EXIST, pageReq, size));
         } else {
             throw new EmptyListException(format(EMPTY_LIST_EXCEPTION, LIST_TYPE_EXCEPTION));
