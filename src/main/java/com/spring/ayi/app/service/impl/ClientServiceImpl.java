@@ -79,7 +79,7 @@ public class ClientServiceImpl implements IClientService {
         Pageable pageable = PageRequest.of(pageReq, size);
         Page<Client> clientPages = clientRepository.findAll(pageable);
 
-        if (clientPages != null && !clientPages.isEmpty() && !(pageReq > clientPages.getTotalPages())) {
+        if (clientPages != null && !clientPages.isEmpty() && !(pageReq > clientPages.getTotalPages() - 1)) {
             List<ClientResponse> clientContent = clientPages
                     .map(client -> clientMapper.convertEntityToDto(client))
                     .stream()
@@ -115,10 +115,10 @@ public class ClientServiceImpl implements IClientService {
             clientPagesResponse.setNextPage(nextPage);
 
             return clientPagesResponse;
-        } else if (pageReq > clientPages.getTotalPages()) {
-            throw new PageDoesNotExistException(format(PAGE_DOES_NOT_EXIST, pageReq, size));
-        } else {
+        } else if (clientPages.getTotalElements() == 0) {
             throw new EmptyListException(format(EMPTY_LIST_EXCEPTION, LIST_TYPE_EXCEPTION));
+        } else {
+            throw new PageDoesNotExistException(format(PAGE_DOES_NOT_EXIST, pageReq, size));
         }
     }
 

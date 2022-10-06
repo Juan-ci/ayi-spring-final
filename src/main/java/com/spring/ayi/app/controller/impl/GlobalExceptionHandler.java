@@ -2,9 +2,13 @@ package com.spring.ayi.app.controller.impl;
 
 import com.spring.ayi.app.dto.response.ErrorResponse;
 import com.spring.ayi.app.exception.AddressNotFoundException;
+import com.spring.ayi.app.exception.ClientDetailNotFoundException;
 import com.spring.ayi.app.exception.ClientNotFoundException;
 import com.spring.ayi.app.exception.DocumentNumberAlreadyExistException;
 import com.spring.ayi.app.exception.DocumentNumberNotFoundException;
+import com.spring.ayi.app.exception.EmptyListException;
+import com.spring.ayi.app.exception.InvoiceNotFoundException;
+import com.spring.ayi.app.exception.PageDoesNotExistException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -33,6 +37,34 @@ public class GlobalExceptionHandler {
 
         logger.error(response.toString());
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(PageDoesNotExistException.class)
+    public ResponseEntity<ErrorResponse> handlePageDoesNotExists(PageDoesNotExistException ex) {
+        codeStatus = HttpStatus.NOT_FOUND.value();
+        status = HttpStatus.NOT_FOUND.name();
+        ErrorResponse response = ErrorResponse.builder()
+                .status(status)
+                .code(codeStatus)
+                .message(ex.getMessage())
+                .build();
+
+        logger.error(response.toString());
+        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(EmptyListException.class)
+    public ResponseEntity<ErrorResponse> handleEmptyListException(EmptyListException ex) {
+        codeStatus = HttpStatus.NOT_FOUND.value();
+        status = HttpStatus.NOT_FOUND.name();
+        ErrorResponse response = ErrorResponse.builder()
+                .status(status)
+                .code(codeStatus)
+                .message(ex.getMessage())
+                .build();
+
+        logger.error(response.toString());
+        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(DocumentNumberNotFoundException.class)
@@ -65,6 +97,34 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(AddressNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleAddressNotFound(AddressNotFoundException ex) {
+        codeStatus = HttpStatus.NOT_FOUND.value();
+        status = HttpStatus.NOT_FOUND.name();
+        ErrorResponse response = ErrorResponse.builder()
+                .status(status)
+                .code(codeStatus)
+                .message(ex.getMessage())
+                .build();
+
+        logger.error(response.toString());
+        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(ClientDetailNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleClientDetailNotFound(ClientDetailNotFoundException ex) {
+        codeStatus = HttpStatus.NOT_FOUND.value();
+        status = HttpStatus.NOT_FOUND.name();
+        ErrorResponse response = ErrorResponse.builder()
+                .status(status)
+                .code(codeStatus)
+                .message(ex.getMessage())
+                .build();
+
+        logger.error(response.toString());
+        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(InvoiceNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleInvoiceNotFound(InvoiceNotFoundException ex) {
         codeStatus = HttpStatus.NOT_FOUND.value();
         status = HttpStatus.NOT_FOUND.name();
         ErrorResponse response = ErrorResponse.builder()

@@ -1,5 +1,6 @@
 package com.spring.ayi.app.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
@@ -29,6 +30,7 @@ public class InvoiceResponse implements Serializable {
     @ApiModelProperty(position = 3, notes = "Invoice total")
     private Double total;
 
+    @JsonIgnoreProperties(value = "invoices")
     @ApiModelProperty(position = 4, required = true, notes = "Client who owns the invoice")
     private ClientResponse client;
 }

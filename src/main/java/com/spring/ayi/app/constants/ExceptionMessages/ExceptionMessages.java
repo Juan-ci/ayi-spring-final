@@ -10,6 +10,8 @@ public class ExceptionMessages {
 
     public static final String CLIENT_DETAIL_ID_NOT_FOUND = "CLIENT DETAIL ID {0} NOT FOUND.";
 
+    public static final String INVOICE_ID_NOT_FOUND = "INVOICE ID {0} NOT FOUND.";
+
     public static final String DOCUMENT_NUMBER_NOT_FOUND = "DOCUMENT NUMBER {0} NOT FOUND.";
 
     public static final String EMPTY_LIST_EXCEPTION = "LIST OF {0} IS EMPTY.";

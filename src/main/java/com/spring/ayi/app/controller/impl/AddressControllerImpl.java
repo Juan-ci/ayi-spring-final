@@ -21,7 +21,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 @RestController
 @Api(value = "Address Api", tags = "{Address Service}")
 @RequestMapping(value = "/address")
-public class AddressController implements IAddressController {
+public class AddressControllerImpl implements IAddressController {
 
     private IAddressService addressService;
 

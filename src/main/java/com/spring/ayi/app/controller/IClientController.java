@@ -114,7 +114,7 @@ public interface IClientController {
             ),
             @ApiResponse(
                     code = 404,
-                    message = "Describes errors on invalid id wich is not found.")
+                    message = "Describes errors on invalid id which is not found.")
     })
     ResponseEntity<Void> deleteClientById(
             @ApiParam(name = "id", required = true, value = "Client Id", example = "1")
