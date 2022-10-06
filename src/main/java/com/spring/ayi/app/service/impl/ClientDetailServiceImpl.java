@@ -115,10 +115,10 @@ public class ClientDetailServiceImpl implements IClientDetailService {
             clientDetailPagesResponse.setNextPage(nextPage);
 
             return clientDetailPagesResponse;
-        } else if (pageReq > clientDetailPage.getTotalPages() - 1) {
-            throw new PageDoesNotExistException(format(PAGE_DOES_NOT_EXIST, pageReq, size));
-        } else {
+        } else if (clientDetailPage.getTotalElements() == 0) {
             throw new EmptyListException(format(EMPTY_LIST_EXCEPTION, LIST_TYPE_EXCEPTION));
+        } else {
+            throw new PageDoesNotExistException(format(PAGE_DOES_NOT_EXIST, pageReq, size));
         }
     }
 

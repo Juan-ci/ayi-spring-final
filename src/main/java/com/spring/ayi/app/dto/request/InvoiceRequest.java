@@ -30,7 +30,7 @@ public class InvoiceRequest implements Serializable {
     @ApiModelProperty(position = 2, required = true, notes = "Non negative value, total can not be null")
     private Double total;
 
-//    @NotNull(message = "Client can not be null")
+    @NotNull(message = "Client documnt number can not be null")
     @ApiModelProperty(position = 3, required = true, notes = "Client who owns the invoice")
-    private ClientRequest client;
+    private String clientDocumentNumber;
 }

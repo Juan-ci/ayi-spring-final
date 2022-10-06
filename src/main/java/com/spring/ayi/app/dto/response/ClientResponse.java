@@ -43,6 +43,7 @@ public class ClientResponse implements Serializable {
     @ApiModelProperty(position = 6, notes = "The addresses of the client.")
     private List<AddressResponse> addresses;
 
+    @JsonIgnoreProperties(value = "client")
     @ApiModelProperty(position = 7, notes = "The invoices of the client.")
-    private List<AddressResponse> invoices;
+    private List<InvoiceResponse> invoices;
 }

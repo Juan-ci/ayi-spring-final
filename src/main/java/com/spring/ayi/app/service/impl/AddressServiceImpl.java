@@ -112,10 +112,10 @@ public class AddressServiceImpl implements IAddressService {
             addressPagesResponse.setNextPage(nextPage);
 
             return addressPagesResponse;
-        } else if (pageReq > addressPage.getTotalPages() - 1) {
-            throw new PageDoesNotExistException(format(PAGE_DOES_NOT_EXIST, pageReq, size));
-        } else {
+        } else if (addressPage.getTotalElements() == 0) {
             throw new EmptyListException(format(EMPTY_LIST_EXCEPTION, LIST_EMPTY_TYPE));
+        } else {
+            throw new PageDoesNotExistException(format(PAGE_DOES_NOT_EXIST, pageReq, size));
         }
     }
 

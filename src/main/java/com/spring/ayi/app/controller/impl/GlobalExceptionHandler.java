@@ -7,6 +7,7 @@ import com.spring.ayi.app.exception.ClientNotFoundException;
 import com.spring.ayi.app.exception.DocumentNumberAlreadyExistException;
 import com.spring.ayi.app.exception.DocumentNumberNotFoundException;
 import com.spring.ayi.app.exception.EmptyListException;
+import com.spring.ayi.app.exception.InvoiceNotFoundException;
 import com.spring.ayi.app.exception.PageDoesNotExistException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -110,6 +111,20 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(ClientDetailNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleClientDetailNotFound(ClientDetailNotFoundException ex) {
+        codeStatus = HttpStatus.NOT_FOUND.value();
+        status = HttpStatus.NOT_FOUND.name();
+        ErrorResponse response = ErrorResponse.builder()
+                .status(status)
+                .code(codeStatus)
+                .message(ex.getMessage())
+                .build();
+
+        logger.error(response.toString());
+        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(InvoiceNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleInvoiceNotFound(InvoiceNotFoundException ex) {
         codeStatus = HttpStatus.NOT_FOUND.value();
         status = HttpStatus.NOT_FOUND.name();
         ErrorResponse response = ErrorResponse.builder()
