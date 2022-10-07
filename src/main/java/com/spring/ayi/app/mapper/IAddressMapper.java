@@ -1,7 +1,7 @@
 package com.spring.ayi.app.mapper;
 
-import com.spring.ayi.app.dto.request.AddressRequest;
-import com.spring.ayi.app.dto.response.AddressResponse;
+import com.spring.ayi.app.dto.request.address.AddressRequest;
+import com.spring.ayi.app.dto.response.address.AddressResponse;
 import com.spring.ayi.app.entity.Address;
 
 public interface IAddressMapper {

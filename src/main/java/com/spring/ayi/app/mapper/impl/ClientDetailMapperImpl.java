@@ -1,14 +1,12 @@
 package com.spring.ayi.app.mapper.impl;
 
-import com.spring.ayi.app.dto.request.ClientDetailRequest;
-import com.spring.ayi.app.dto.response.ClientDetailResponse;
+import com.spring.ayi.app.dto.request.clientDetail.ClientDetailRequest;
+import com.spring.ayi.app.dto.response.clientDetail.ClientDetailResponse;
 import com.spring.ayi.app.entity.ClientDetail;
 import com.spring.ayi.app.mapper.IClientDetailMapper;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
-
-import java.util.function.Function;
 
 @Component
 @AllArgsConstructor

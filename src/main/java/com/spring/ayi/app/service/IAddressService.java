@@ -1,13 +1,14 @@
 package com.spring.ayi.app.service;
 
-import com.spring.ayi.app.dto.request.AddressRequest;
-import com.spring.ayi.app.dto.response.AddressResponse;
-import com.spring.ayi.app.dto.response.GenericListPaginationResponse;
-import com.spring.ayi.app.exception.AddressNotFoundException;
-import com.spring.ayi.app.exception.ClientNotFoundException;
-import com.spring.ayi.app.exception.DocumentNumberNotFoundException;
-import com.spring.ayi.app.exception.EmptyListException;
-import com.spring.ayi.app.exception.PageDoesNotExistException;
+import com.spring.ayi.app.dto.request.address.AddressRequest;
+import com.spring.ayi.app.dto.request.client.AddressRequestWithoutDocumentNumber;
+import com.spring.ayi.app.dto.response.address.AddressResponse;
+import com.spring.ayi.app.dto.response.pagination.GenericListPaginationResponse;
+import com.spring.ayi.app.exception.custom.AddressNotFoundException;
+import com.spring.ayi.app.exception.custom.ClientNotFoundException;
+import com.spring.ayi.app.exception.custom.DocumentNumberNotFoundException;
+import com.spring.ayi.app.exception.custom.EmptyListException;
+import com.spring.ayi.app.exception.custom.PageDoesNotExistException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -33,7 +34,7 @@ public interface IAddressService {
     AddressResponse getOneAddressById(Long idAddress) throws AddressNotFoundException;
 
     @Transactional
-    AddressResponse updateAddress(Long idAddress, AddressRequest request) throws AddressNotFoundException;
+    AddressResponse updateAddress(Long idAddress, AddressRequestWithoutDocumentNumber request) throws AddressNotFoundException;
 
     @Transactional
     void deleteAddressById(Long idAddress) throws AddressNotFoundException;

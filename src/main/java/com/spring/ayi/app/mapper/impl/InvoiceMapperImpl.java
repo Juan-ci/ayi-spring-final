@@ -1,7 +1,7 @@
 package com.spring.ayi.app.mapper.impl;
 
-import com.spring.ayi.app.dto.request.InvoiceRequest;
-import com.spring.ayi.app.dto.response.InvoiceResponse;
+import com.spring.ayi.app.dto.request.invoice.InvoiceRequest;
+import com.spring.ayi.app.dto.response.invoice.InvoiceResponse;
 import com.spring.ayi.app.entity.Invoice;
 import com.spring.ayi.app.mapper.IInvoiceMapper;
 import lombok.AllArgsConstructor;

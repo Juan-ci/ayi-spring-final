@@ -1,15 +1,15 @@
 package com.spring.ayi.app.service.impl;
 
-import com.spring.ayi.app.dto.request.InvoiceRequest;
-import com.spring.ayi.app.dto.response.GenericListPaginationResponse;
-import com.spring.ayi.app.dto.response.InvoiceResponse;
+import com.spring.ayi.app.dto.request.invoice.InvoiceRequest;
+import com.spring.ayi.app.dto.request.invoice.InvoiceRequestWithoutDocumentNumber;
+import com.spring.ayi.app.dto.response.pagination.GenericListPaginationResponse;
+import com.spring.ayi.app.dto.response.invoice.InvoiceResponse;
 import com.spring.ayi.app.entity.Client;
 import com.spring.ayi.app.entity.Invoice;
-import com.spring.ayi.app.exception.DocumentNumberNotFoundException;
-import com.spring.ayi.app.exception.InvoiceNotFoundException;
-import com.spring.ayi.app.exception.EmptyListException;
-import com.spring.ayi.app.exception.PageDoesNotExistException;
-import com.spring.ayi.app.mapper.IClientMapper;
+import com.spring.ayi.app.exception.custom.DocumentNumberNotFoundException;
+import com.spring.ayi.app.exception.custom.InvoiceNotFoundException;
+import com.spring.ayi.app.exception.custom.EmptyListException;
+import com.spring.ayi.app.exception.custom.PageDoesNotExistException;
 import com.spring.ayi.app.mapper.IInvoiceMapper;
 import com.spring.ayi.app.repository.IInvoiceRepository;
 import com.spring.ayi.app.service.IClientService;
@@ -121,7 +121,7 @@ public class InvoiceServiceImpl implements IInvoiceService {
 
     @Override
     @Transactional
-    public InvoiceResponse updateInvoice(Long idInvoice, InvoiceRequest request) throws InvoiceNotFoundException {
+    public InvoiceResponse updateInvoice(Long idInvoice, InvoiceRequestWithoutDocumentNumber request) throws InvoiceNotFoundException {
         Invoice invoiceToUpdate = this.getInvoiceById(idInvoice);
 
         invoiceToUpdate.setDescription(request.getDescription());

@@ -1,14 +1,14 @@
 package com.spring.ayi.app.service.impl;
 
-import com.spring.ayi.app.dto.request.ClientDetailRequest;
-import com.spring.ayi.app.dto.response.ClientDetailResponse;
-import com.spring.ayi.app.dto.response.GenericListPaginationResponse;
+import com.spring.ayi.app.dto.request.clientDetail.ClientDetailRequest;
+import com.spring.ayi.app.dto.response.clientDetail.ClientDetailResponse;
+import com.spring.ayi.app.dto.response.pagination.GenericListPaginationResponse;
 import com.spring.ayi.app.entity.Client;
 import com.spring.ayi.app.entity.ClientDetail;
-import com.spring.ayi.app.exception.ClientDetailNotFoundException;
-import com.spring.ayi.app.exception.DocumentNumberNotFoundException;
-import com.spring.ayi.app.exception.EmptyListException;
-import com.spring.ayi.app.exception.PageDoesNotExistException;
+import com.spring.ayi.app.exception.custom.ClientDetailNotFoundException;
+import com.spring.ayi.app.exception.custom.DocumentNumberNotFoundException;
+import com.spring.ayi.app.exception.custom.EmptyListException;
+import com.spring.ayi.app.exception.custom.PageDoesNotExistException;
 import com.spring.ayi.app.mapper.IClientDetailMapper;
 import com.spring.ayi.app.repository.IClientDetailRepository;
 import com.spring.ayi.app.service.IClientDetailService;

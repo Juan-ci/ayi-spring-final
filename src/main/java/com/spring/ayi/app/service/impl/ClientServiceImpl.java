@@ -1,16 +1,16 @@
 package com.spring.ayi.app.service.impl;
 
-import com.spring.ayi.app.dto.request.ClientRequest;
-import com.spring.ayi.app.dto.response.ClientResponse;
-import com.spring.ayi.app.dto.response.GenericListPaginationResponse;
+import com.spring.ayi.app.dto.request.client.ClientRequest;
+import com.spring.ayi.app.dto.response.client.ClientResponse;
+import com.spring.ayi.app.dto.response.pagination.GenericListPaginationResponse;
 import com.spring.ayi.app.entity.Address;
 import com.spring.ayi.app.entity.Client;
 import com.spring.ayi.app.entity.ClientDetail;
-import com.spring.ayi.app.exception.ClientNotFoundException;
-import com.spring.ayi.app.exception.DocumentNumberAlreadyExistException;
-import com.spring.ayi.app.exception.DocumentNumberNotFoundException;
-import com.spring.ayi.app.exception.EmptyListException;
-import com.spring.ayi.app.exception.PageDoesNotExistException;
+import com.spring.ayi.app.exception.custom.ClientNotFoundException;
+import com.spring.ayi.app.exception.custom.DocumentNumberAlreadyExistException;
+import com.spring.ayi.app.exception.custom.DocumentNumberNotFoundException;
+import com.spring.ayi.app.exception.custom.EmptyListException;
+import com.spring.ayi.app.exception.custom.PageDoesNotExistException;
 import com.spring.ayi.app.mapper.IClientMapper;
 import com.spring.ayi.app.repository.IClientRepository;
 import com.spring.ayi.app.service.IClientService;
@@ -180,12 +180,30 @@ public class ClientServiceImpl implements IClientService {
         return clientMapper.convertEntityToDto(clientToUpdate);
     }
 
+    /**
+     * It is a softDelete, when it is deleted
+     * all the addresses in it are deleted too, and client detail so,
+     * invoices are not deleted
+     * @param idClient
+     * @throws ClientNotFoundException
+     */
     @Override
     @Transactional
     public void deleteClientById(Long idClient) throws ClientNotFoundException {
         Client clientToDelete = this.getClientById(idClient);
-
         clientToDelete.setSoftDelete(Boolean.TRUE);
+
+        ClientDetail clientDetail = clientToDelete.getClientDetail();
+        if (clientDetail != null) {
+            clientDetail.setSoftDelete(Boolean.TRUE);
+        }
+
+        List<Address> addresses = clientToDelete.getAddresses();
+        if (addresses != null) {
+            addresses.forEach(address -> {
+                address.setSoftDelete(Boolean.TRUE);
+            });
+        }
 
         clientRepository.save(clientToDelete);
     }
