@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 
@@ -56,6 +57,7 @@ public class AddressRequest implements Serializable {
     @NotNull(message = "Client document number can not be null")
     @Size(min = 7, message = "Client Document number min size is 7 and max size is 8")
     @Size(max = 8, message = "Client Document number min size is 7 and max size is 8")
+    @Pattern(regexp = "^\\d*$", message = "Document number must be numbers")
     @ApiModelProperty(position = 8, required = true, notes = "Not null value, client document number is required.")
     private String clientDocumentNumber;
 }

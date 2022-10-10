@@ -12,6 +12,7 @@ import lombok.Setter;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.List;
@@ -34,17 +35,18 @@ public class ClientRequest implements Serializable {
      */
 
     @NotNull(message = "Name can not be null.")
+    @Pattern(regexp = "^[A-Z][a-z]*$", message = "Name must be a word beginning with capital case.")
     @ApiModelProperty(position = 1, required = true, notes = "Non empty value, The first name is required.")
     private String name;
 
     @NotNull(message = "Lastname can not be null.")
+    @Pattern(regexp = "^[A-Z][a-z]*$", message = "Lastname must be a word beginning with capital case.")
     @ApiModelProperty(position = 2, required = true, notes = "Non empty value, The last name is required.")
     private String lastname;
 
     @NotNull(message = "Document number can not be null.")
-    @Size(min = 7, message = "Document number min size is 7 and max size is 8")
-    @Size(max = 8, message = "Document number min size is 7 and max size is 8")
-//    @Pattern(regexp = "\\w[0-9]", message = "Document number must be digits from 0 to 9")
+    @Size(min = 7, max = 8, message = "Document number min size is 7 and max size is 8")
+    @Pattern(regexp = "^\\d*$", message = "Document number must be numbers")
     @ApiModelProperty(position = 3, required = true, notes = "Non negative value, The document number is required.")
     private String documentNumber;
 
@@ -55,5 +57,5 @@ public class ClientRequest implements Serializable {
     @NotEmpty(message = "Address can not be null.")
     @ApiModelProperty(position = 5, required = true, notes = "Non empty value, The address is required.")
     @JsonIgnoreProperties(value = "clientDocumentNumber")
-    private List<AddressRequest> addresses;
+    private List<AddressRequestWithoutDocumentNumber> addresses;
 }

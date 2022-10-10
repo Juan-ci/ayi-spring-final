@@ -53,9 +53,7 @@ public class ClientServiceImpl implements IClientService {
         if (!clientRepository.existsByDocumentNumber(documentNumber)) {
             if (address != null && address.size() > 0) {
                 Client finalClient = client;
-                address.forEach(addr -> {
-                    addr.setClient(finalClient);
-                });
+                address.forEach(addr -> addr.setClient(finalClient));
             }
 
             clientDetail.setClient(client);
@@ -95,17 +93,17 @@ public class ClientServiceImpl implements IClientService {
             String nextPage = constructNextPageUri(uriBuilder, pageReq);
             String prevPage = constructPrevPageUri(uriBuilder, pageReq);
 
-            /**
-             * If page is equal to 0, then
-             * there is no previous page
+            /*
+              If page is equal to 0, then
+              there is no previous page
              */
             if (pageable.getPageNumber() == 0) {
                 prevPage = null;
             }
 
-            /**
-             * If page is equal to the last page, then
-             *  there is no next page
+            /*
+              If page is equal to the last page, then
+               there is no next page
              */
             if (pageable.getPageNumber() == clientPages.getTotalPages() - 1) {
                 nextPage = null;
@@ -133,15 +131,15 @@ public class ClientServiceImpl implements IClientService {
     @Override
     @Transactional
     public ClientResponse updateClient(Long id, ClientRequest request) throws ClientNotFoundException {
-        /**
-         * No se agregan facturas ya que se actualiza el cliente cuando se crean nuevas facturas
+        /*
+          No se agregan facturas ya que se actualiza el cliente cuando se crean nuevas facturas
          */
         Client dataToUpdate = clientMapper.convertDtoToEntity(request);
         Client clientToUpdate = this.getClientById(id);
 
         if (request.getClientDetail() != null) {
-            /**
-             * Updated Client detail
+            /*
+              Updated Client detail
              */
             ClientDetail clientDetailUpdated = dataToUpdate.getClientDetail();
             clientDetailUpdated.setIdClientDetail(clientToUpdate.getClientDetail().getIdClientDetail());
@@ -157,21 +155,21 @@ public class ClientServiceImpl implements IClientService {
 
         List<Address> newAddresses = dataToUpdate.getAddresses();
         if (newAddresses != null && !newAddresses.isEmpty()) {
-            /**
-             * Get the old addresses
+            /*
+              Get the old addresses
               */
             List<Address> currentAddresses = clientToUpdate.getAddresses();
 
             Client finalClientToUpdate = clientToUpdate;
             newAddresses.forEach(address -> {
-                /**
-                 *  Add the new addresses
+                /*
+                   Add the new addresses
                  */
                 address.setClient(finalClientToUpdate);
                 currentAddresses.add(address);
             });
-            /**
-             *  Set the new list of addresses
+            /*
+               Set the new list of addresses
              */
             clientToUpdate.setAddresses(currentAddresses);
         }
