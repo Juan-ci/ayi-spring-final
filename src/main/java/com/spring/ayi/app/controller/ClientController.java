@@ -30,6 +30,8 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.validation.Valid;
 
+import static com.spring.ayi.app.constants.path.PathUrls.CLIENT_PATH;
+
 @AllArgsConstructor
 @Api(value = "Client Api", tags = "{Client Service}")
 @RestController
@@ -79,7 +81,7 @@ public class ClientController {
             @ApiParam(value = "number of items per request", example = "1")
             @RequestParam(name = "size", defaultValue = "5") Integer size,
             UriComponentsBuilder uriBuilder) throws PageDoesNotExistException, EmptyListException {
-        GenericListPaginationResponse<ClientResponse> response = clientService.getClientPage("/client/", page, size, uriBuilder);
+        GenericListPaginationResponse<ClientResponse> response = clientService.getClientPage(CLIENT_PATH, page, size, uriBuilder);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 

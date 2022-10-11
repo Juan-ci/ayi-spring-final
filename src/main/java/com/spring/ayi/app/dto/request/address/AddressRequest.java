@@ -33,12 +33,10 @@ public class AddressRequest implements Serializable {
     private String streetNumber;
 
     @NotNull(message = "Floor can not be null")
-//    @Pattern(regexp = "\\d", message = "Floor must be digits from 0 to 9")
     @ApiModelProperty(position = 3, required = true, notes = "Not null value, floor is required")
     private Integer floor;
 
     @NotNull(message = "Postal code can not be null")
-//    @Pattern(regexp = "\\d", message = "Postal Code must be digits from 0 to 9")
     @ApiModelProperty(position = 4, required = true, notes = "Not null value, postal code is required")
     private Integer postalCode;
 

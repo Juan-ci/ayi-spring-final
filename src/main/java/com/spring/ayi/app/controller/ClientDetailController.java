@@ -30,6 +30,8 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.validation.Valid;
 
+import static com.spring.ayi.app.constants.path.PathUrls.CLIENT_DETAIL_PATH;
+
 @AllArgsConstructor
 @RestController
 @Api(value = "Client Detail Api", tags = "{Client Detail Service}")
@@ -82,7 +84,7 @@ public class ClientDetailController {
                     @RequestParam(name = "size", defaultValue = "5") Integer size,
                     UriComponentsBuilder uriBuilder
             ) throws PageDoesNotExistException, EmptyListException {
-        GenericListPaginationResponse<ClientDetailResponse> response = clientDetailService.getAllClientDetail("/client-detail/", page, size, uriBuilder);
+        GenericListPaginationResponse<ClientDetailResponse> response = clientDetailService.getAllClientDetail(CLIENT_DETAIL_PATH, page, size, uriBuilder);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 

@@ -26,9 +26,9 @@ import javax.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.spring.ayi.app.constants.ExceptionMessages.ExceptionMessages.ADDRESS_ID_NOT_FOUND;
-import static com.spring.ayi.app.constants.ExceptionMessages.ExceptionMessages.EMPTY_LIST_EXCEPTION;
-import static com.spring.ayi.app.constants.ExceptionMessages.ExceptionMessages.PAGE_DOES_NOT_EXIST;
+import static com.spring.ayi.app.constants.exception.messages.ExceptionMessages.ADDRESS_ID_NOT_FOUND;
+import static com.spring.ayi.app.constants.exception.messages.ExceptionMessages.EMPTY_LIST_EXCEPTION;
+import static com.spring.ayi.app.constants.exception.messages.ExceptionMessages.PAGE_DOES_NOT_EXIST;
 import static java.text.MessageFormat.format;
 
 @Service

@@ -25,11 +25,11 @@ import javax.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.spring.ayi.app.constants.ExceptionMessages.ExceptionMessages.CLIENT_ID_NOT_FOUND;
-import static com.spring.ayi.app.constants.ExceptionMessages.ExceptionMessages.DOCUMENT_ALREADY_EXIST;
-import static com.spring.ayi.app.constants.ExceptionMessages.ExceptionMessages.DOCUMENT_NUMBER_NOT_FOUND;
-import static com.spring.ayi.app.constants.ExceptionMessages.ExceptionMessages.EMPTY_LIST_EXCEPTION;
-import static com.spring.ayi.app.constants.ExceptionMessages.ExceptionMessages.PAGE_DOES_NOT_EXIST;
+import static com.spring.ayi.app.constants.exception.messages.ExceptionMessages.CLIENT_ID_NOT_FOUND;
+import static com.spring.ayi.app.constants.exception.messages.ExceptionMessages.DOCUMENT_ALREADY_EXIST;
+import static com.spring.ayi.app.constants.exception.messages.ExceptionMessages.DOCUMENT_NUMBER_NOT_FOUND;
+import static com.spring.ayi.app.constants.exception.messages.ExceptionMessages.EMPTY_LIST_EXCEPTION;
+import static com.spring.ayi.app.constants.exception.messages.ExceptionMessages.PAGE_DOES_NOT_EXIST;
 import static java.text.MessageFormat.format;
 
 @Service

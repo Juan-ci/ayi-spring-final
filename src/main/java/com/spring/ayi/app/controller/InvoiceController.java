@@ -31,6 +31,8 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.validation.Valid;
 
+import static com.spring.ayi.app.constants.path.PathUrls.INVOICE_PATH;
+
 @RestController
 @AllArgsConstructor
 @Api(value = "Invoice Api", tags = "{Invoice Service}")
@@ -82,7 +84,7 @@ public class InvoiceController {
                     @RequestParam(name = "size", defaultValue = "5") Integer size,
                     UriComponentsBuilder uriBuilder
             ) throws PageDoesNotExistException, EmptyListException {
-        GenericListPaginationResponse<InvoiceResponse> response = invoiceService.getAllInvoices("/invoice/", page, size, uriBuilder);
+        GenericListPaginationResponse<InvoiceResponse> response = invoiceService.getAllInvoices(INVOICE_PATH, page, size, uriBuilder);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 

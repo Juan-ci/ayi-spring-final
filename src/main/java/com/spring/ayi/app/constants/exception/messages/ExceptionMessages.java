@@ -1,4 +1,4 @@
-package com.spring.ayi.app.constants.ExceptionMessages;
+package com.spring.ayi.app.constants.exception.messages;
 
 public class ExceptionMessages {
 

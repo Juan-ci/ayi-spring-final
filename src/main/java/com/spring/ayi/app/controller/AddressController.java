@@ -31,6 +31,8 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.validation.Valid;
 
+import static com.spring.ayi.app.constants.path.PathUrls.ADDRESS_PATH;
+
 @AllArgsConstructor
 @RestController
 @Api(value = "Address Api", tags = "{Address Service}")
@@ -82,7 +84,7 @@ public class AddressController {
                     @RequestParam(name = "size", defaultValue = "5") Integer size,
                     UriComponentsBuilder uriBuilder
             ) throws PageDoesNotExistException, EmptyListException {
-        GenericListPaginationResponse response = addressService.getAllAddress("/address/", page, size, uriBuilder);
+        GenericListPaginationResponse response = addressService.getAllAddress(ADDRESS_PATH, page, size, uriBuilder);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 

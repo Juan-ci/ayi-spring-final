@@ -1,7 +1,6 @@
 package com.spring.ayi.app.dto.request.client;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.spring.ayi.app.dto.request.address.AddressRequest;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
