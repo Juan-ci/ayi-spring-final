@@ -1,14 +1,14 @@
 package com.spring.ayi.app.service.impl;
 
-import com.spring.ayi.app.dto.request.ClientDetailRequest;
-import com.spring.ayi.app.dto.response.ClientDetailResponse;
-import com.spring.ayi.app.dto.response.GenericListPaginationResponse;
+import com.spring.ayi.app.dto.request.clientDetail.ClientDetailRequest;
+import com.spring.ayi.app.dto.response.clientDetail.ClientDetailResponse;
+import com.spring.ayi.app.dto.response.pagination.GenericListPaginationResponse;
 import com.spring.ayi.app.entity.Client;
 import com.spring.ayi.app.entity.ClientDetail;
-import com.spring.ayi.app.exception.ClientDetailNotFoundException;
-import com.spring.ayi.app.exception.DocumentNumberNotFoundException;
-import com.spring.ayi.app.exception.EmptyListException;
-import com.spring.ayi.app.exception.PageDoesNotExistException;
+import com.spring.ayi.app.exception.custom.ClientDetailNotFoundException;
+import com.spring.ayi.app.exception.custom.DocumentNumberNotFoundException;
+import com.spring.ayi.app.exception.custom.EmptyListException;
+import com.spring.ayi.app.exception.custom.PageDoesNotExistException;
 import com.spring.ayi.app.mapper.IClientDetailMapper;
 import com.spring.ayi.app.repository.IClientDetailRepository;
 import com.spring.ayi.app.service.IClientDetailService;
@@ -24,9 +24,9 @@ import javax.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.spring.ayi.app.constants.ExceptionMessages.ExceptionMessages.CLIENT_DETAIL_ID_NOT_FOUND;
-import static com.spring.ayi.app.constants.ExceptionMessages.ExceptionMessages.EMPTY_LIST_EXCEPTION;
-import static com.spring.ayi.app.constants.ExceptionMessages.ExceptionMessages.PAGE_DOES_NOT_EXIST;
+import static com.spring.ayi.app.constants.exception.messages.ExceptionMessages.CLIENT_DETAIL_ID_NOT_FOUND;
+import static com.spring.ayi.app.constants.exception.messages.ExceptionMessages.EMPTY_LIST_EXCEPTION;
+import static com.spring.ayi.app.constants.exception.messages.ExceptionMessages.PAGE_DOES_NOT_EXIST;
 import static java.text.MessageFormat.format;
 
 @Service

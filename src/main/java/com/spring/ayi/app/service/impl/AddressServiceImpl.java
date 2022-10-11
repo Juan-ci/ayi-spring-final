@@ -1,15 +1,16 @@
 package com.spring.ayi.app.service.impl;
 
-import com.spring.ayi.app.dto.request.AddressRequest;
-import com.spring.ayi.app.dto.response.AddressResponse;
-import com.spring.ayi.app.dto.response.GenericListPaginationResponse;
+import com.spring.ayi.app.dto.request.address.AddressRequest;
+import com.spring.ayi.app.dto.request.client.AddressRequestWithoutDocumentNumber;
+import com.spring.ayi.app.dto.response.address.AddressResponse;
+import com.spring.ayi.app.dto.response.pagination.GenericListPaginationResponse;
 import com.spring.ayi.app.entity.Address;
 import com.spring.ayi.app.entity.Client;
-import com.spring.ayi.app.exception.AddressNotFoundException;
-import com.spring.ayi.app.exception.ClientNotFoundException;
-import com.spring.ayi.app.exception.DocumentNumberNotFoundException;
-import com.spring.ayi.app.exception.EmptyListException;
-import com.spring.ayi.app.exception.PageDoesNotExistException;
+import com.spring.ayi.app.exception.custom.AddressNotFoundException;
+import com.spring.ayi.app.exception.custom.ClientNotFoundException;
+import com.spring.ayi.app.exception.custom.DocumentNumberNotFoundException;
+import com.spring.ayi.app.exception.custom.EmptyListException;
+import com.spring.ayi.app.exception.custom.PageDoesNotExistException;
 import com.spring.ayi.app.mapper.IAddressMapper;
 import com.spring.ayi.app.repository.IAddressRepository;
 import com.spring.ayi.app.service.IAddressService;
@@ -25,9 +26,9 @@ import javax.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.spring.ayi.app.constants.ExceptionMessages.ExceptionMessages.ADDRESS_ID_NOT_FOUND;
-import static com.spring.ayi.app.constants.ExceptionMessages.ExceptionMessages.EMPTY_LIST_EXCEPTION;
-import static com.spring.ayi.app.constants.ExceptionMessages.ExceptionMessages.PAGE_DOES_NOT_EXIST;
+import static com.spring.ayi.app.constants.exception.messages.ExceptionMessages.ADDRESS_ID_NOT_FOUND;
+import static com.spring.ayi.app.constants.exception.messages.ExceptionMessages.EMPTY_LIST_EXCEPTION;
+import static com.spring.ayi.app.constants.exception.messages.ExceptionMessages.PAGE_DOES_NOT_EXIST;
 import static java.text.MessageFormat.format;
 
 @Service
@@ -128,7 +129,7 @@ public class AddressServiceImpl implements IAddressService {
 
     @Override
     @Transactional
-    public AddressResponse updateAddress(Long idAddress, AddressRequest request) throws AddressNotFoundException {
+    public AddressResponse updateAddress(Long idAddress, AddressRequestWithoutDocumentNumber request) throws AddressNotFoundException {
         Address addressToUpdate = this.getAddressById(idAddress);
 
         addressToUpdate.setCountry(request.getCountry());

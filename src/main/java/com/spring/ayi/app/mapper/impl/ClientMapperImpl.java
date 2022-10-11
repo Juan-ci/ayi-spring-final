@@ -1,7 +1,7 @@
 package com.spring.ayi.app.mapper.impl;
 
-import com.spring.ayi.app.dto.request.ClientRequest;
-import com.spring.ayi.app.dto.response.ClientResponse;
+import com.spring.ayi.app.dto.request.client.ClientRequest;
+import com.spring.ayi.app.dto.response.client.ClientResponse;
 import com.spring.ayi.app.entity.Client;
 import com.spring.ayi.app.mapper.IClientMapper;
 import lombok.AllArgsConstructor;

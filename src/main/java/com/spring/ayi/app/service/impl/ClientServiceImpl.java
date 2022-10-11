@@ -1,16 +1,16 @@
 package com.spring.ayi.app.service.impl;
 
-import com.spring.ayi.app.dto.request.ClientRequest;
-import com.spring.ayi.app.dto.response.ClientResponse;
-import com.spring.ayi.app.dto.response.GenericListPaginationResponse;
+import com.spring.ayi.app.dto.request.client.ClientRequest;
+import com.spring.ayi.app.dto.response.client.ClientResponse;
+import com.spring.ayi.app.dto.response.pagination.GenericListPaginationResponse;
 import com.spring.ayi.app.entity.Address;
 import com.spring.ayi.app.entity.Client;
 import com.spring.ayi.app.entity.ClientDetail;
-import com.spring.ayi.app.exception.ClientNotFoundException;
-import com.spring.ayi.app.exception.DocumentNumberAlreadyExistException;
-import com.spring.ayi.app.exception.DocumentNumberNotFoundException;
-import com.spring.ayi.app.exception.EmptyListException;
-import com.spring.ayi.app.exception.PageDoesNotExistException;
+import com.spring.ayi.app.exception.custom.ClientNotFoundException;
+import com.spring.ayi.app.exception.custom.DocumentNumberAlreadyExistException;
+import com.spring.ayi.app.exception.custom.DocumentNumberNotFoundException;
+import com.spring.ayi.app.exception.custom.EmptyListException;
+import com.spring.ayi.app.exception.custom.PageDoesNotExistException;
 import com.spring.ayi.app.mapper.IClientMapper;
 import com.spring.ayi.app.repository.IClientRepository;
 import com.spring.ayi.app.service.IClientService;
@@ -25,11 +25,11 @@ import javax.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.spring.ayi.app.constants.ExceptionMessages.ExceptionMessages.CLIENT_ID_NOT_FOUND;
-import static com.spring.ayi.app.constants.ExceptionMessages.ExceptionMessages.DOCUMENT_ALREADY_EXIST;
-import static com.spring.ayi.app.constants.ExceptionMessages.ExceptionMessages.DOCUMENT_NUMBER_NOT_FOUND;
-import static com.spring.ayi.app.constants.ExceptionMessages.ExceptionMessages.EMPTY_LIST_EXCEPTION;
-import static com.spring.ayi.app.constants.ExceptionMessages.ExceptionMessages.PAGE_DOES_NOT_EXIST;
+import static com.spring.ayi.app.constants.exception.messages.ExceptionMessages.CLIENT_ID_NOT_FOUND;
+import static com.spring.ayi.app.constants.exception.messages.ExceptionMessages.DOCUMENT_ALREADY_EXIST;
+import static com.spring.ayi.app.constants.exception.messages.ExceptionMessages.DOCUMENT_NUMBER_NOT_FOUND;
+import static com.spring.ayi.app.constants.exception.messages.ExceptionMessages.EMPTY_LIST_EXCEPTION;
+import static com.spring.ayi.app.constants.exception.messages.ExceptionMessages.PAGE_DOES_NOT_EXIST;
 import static java.text.MessageFormat.format;
 
 @Service
@@ -53,9 +53,7 @@ public class ClientServiceImpl implements IClientService {
         if (!clientRepository.existsByDocumentNumber(documentNumber)) {
             if (address != null && address.size() > 0) {
                 Client finalClient = client;
-                address.forEach(addr -> {
-                    addr.setClient(finalClient);
-                });
+                address.forEach(addr -> addr.setClient(finalClient));
             }
 
             clientDetail.setClient(client);
@@ -95,17 +93,17 @@ public class ClientServiceImpl implements IClientService {
             String nextPage = constructNextPageUri(uriBuilder, pageReq);
             String prevPage = constructPrevPageUri(uriBuilder, pageReq);
 
-            /**
-             * If page is equal to 0, then
-             * there is no previous page
+            /*
+              If page is equal to 0, then
+              there is no previous page
              */
             if (pageable.getPageNumber() == 0) {
                 prevPage = null;
             }
 
-            /**
-             * If page is equal to the last page, then
-             *  there is no next page
+            /*
+              If page is equal to the last page, then
+               there is no next page
              */
             if (pageable.getPageNumber() == clientPages.getTotalPages() - 1) {
                 nextPage = null;
@@ -133,15 +131,15 @@ public class ClientServiceImpl implements IClientService {
     @Override
     @Transactional
     public ClientResponse updateClient(Long id, ClientRequest request) throws ClientNotFoundException {
-        /**
-         * No se agregan facturas ya que se actualiza el cliente cuando se crean nuevas facturas
+        /*
+          No se agregan facturas ya que se actualiza el cliente cuando se crean nuevas facturas
          */
         Client dataToUpdate = clientMapper.convertDtoToEntity(request);
         Client clientToUpdate = this.getClientById(id);
 
         if (request.getClientDetail() != null) {
-            /**
-             * Updated Client detail
+            /*
+              Updated Client detail
              */
             ClientDetail clientDetailUpdated = dataToUpdate.getClientDetail();
             clientDetailUpdated.setIdClientDetail(clientToUpdate.getClientDetail().getIdClientDetail());
@@ -157,21 +155,21 @@ public class ClientServiceImpl implements IClientService {
 
         List<Address> newAddresses = dataToUpdate.getAddresses();
         if (newAddresses != null && !newAddresses.isEmpty()) {
-            /**
-             * Get the old addresses
+            /*
+              Get the old addresses
               */
             List<Address> currentAddresses = clientToUpdate.getAddresses();
 
             Client finalClientToUpdate = clientToUpdate;
             newAddresses.forEach(address -> {
-                /**
-                 *  Add the new addresses
+                /*
+                   Add the new addresses
                  */
                 address.setClient(finalClientToUpdate);
                 currentAddresses.add(address);
             });
-            /**
-             *  Set the new list of addresses
+            /*
+               Set the new list of addresses
              */
             clientToUpdate.setAddresses(currentAddresses);
         }
@@ -180,12 +178,30 @@ public class ClientServiceImpl implements IClientService {
         return clientMapper.convertEntityToDto(clientToUpdate);
     }
 
+    /**
+     * It is a softDelete, when it is deleted
+     * all the addresses in it are deleted too, and client detail so,
+     * invoices are not deleted
+     * @param idClient
+     * @throws ClientNotFoundException
+     */
     @Override
     @Transactional
     public void deleteClientById(Long idClient) throws ClientNotFoundException {
         Client clientToDelete = this.getClientById(idClient);
-
         clientToDelete.setSoftDelete(Boolean.TRUE);
+
+        ClientDetail clientDetail = clientToDelete.getClientDetail();
+        if (clientDetail != null) {
+            clientDetail.setSoftDelete(Boolean.TRUE);
+        }
+
+        List<Address> addresses = clientToDelete.getAddresses();
+        if (addresses != null) {
+            addresses.forEach(address -> {
+                address.setSoftDelete(Boolean.TRUE);
+            });
+        }
 
         clientRepository.save(clientToDelete);
     }
