@@ -1,6 +1,8 @@
 package com.spring.ayi.app.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -14,7 +16,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import java.io.Serializable;
 
@@ -23,24 +25,26 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
+@Builder
 @Entity
-@Table(name = "invoice")
-public class Invoice implements Serializable {
+@Table(name = "user_account")
+public class UserAccount implements Serializable {
 
     private static final Long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_invoice")
-    private Long idInvoice;
+    @Column(name = "id_user_account")
+    private Long idUserAccount;
 
-    @Column(name = "description")
-    private String description;
+    @Column(name = "mail")
+    private String mail;
 
-    @Column(name = "total")
-    private Double total;
+    @Column(name = "password")
+    private String password;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @OneToOne(cascade = CascadeType.ALL)
+    @JsonIgnoreProperties(value = "userAccount")
     @JoinColumn(name = "client_id")
     private Client client;
 

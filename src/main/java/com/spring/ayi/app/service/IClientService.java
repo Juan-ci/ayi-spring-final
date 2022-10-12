@@ -9,6 +9,7 @@ import com.spring.ayi.app.exception.custom.DocumentNumberAlreadyExistException;
 import com.spring.ayi.app.exception.custom.DocumentNumberNotFoundException;
 import com.spring.ayi.app.exception.custom.EmptyListException;
 import com.spring.ayi.app.exception.custom.PageDoesNotExistException;
+import com.spring.ayi.app.exception.custom.UserAccountNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -18,7 +19,8 @@ import javax.transaction.Transactional;
 public interface IClientService {
 
     @Transactional
-    ClientResponse createClient(ClientRequest request) throws DocumentNumberAlreadyExistException;
+    ClientResponse createClient(ClientRequest request)
+            throws DocumentNumberAlreadyExistException, UserAccountNotFoundException;
 
     @Transactional
     GenericListPaginationResponse<ClientResponse> getClientPage(String uri, int pageReq, Integer size, UriComponentsBuilder uriBuilder)
@@ -28,7 +30,8 @@ public interface IClientService {
     ClientResponse getOneClientById(Long idClient) throws ClientNotFoundException;
 
     @Transactional
-    ClientResponse updateClient(Long id, ClientRequest request) throws ClientNotFoundException;
+    ClientResponse updateClient(Long id, ClientRequest request)
+            throws ClientNotFoundException, UserAccountNotFoundException;
 
     @Transactional
     void deleteClientById(Long idClient) throws ClientNotFoundException;

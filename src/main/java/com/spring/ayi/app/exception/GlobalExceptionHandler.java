@@ -2,12 +2,11 @@ package com.spring.ayi.app.exception;
 
 import com.spring.ayi.app.dto.response.error.ErrorResponse;
 import com.spring.ayi.app.exception.custom.AddressNotFoundException;
-import com.spring.ayi.app.exception.custom.ClientDetailNotFoundException;
+import com.spring.ayi.app.exception.custom.UserAccountNotFoundException;
 import com.spring.ayi.app.exception.custom.ClientNotFoundException;
 import com.spring.ayi.app.exception.custom.DocumentNumberAlreadyExistException;
 import com.spring.ayi.app.exception.custom.DocumentNumberNotFoundException;
 import com.spring.ayi.app.exception.custom.EmptyListException;
-import com.spring.ayi.app.exception.custom.InvoiceNotFoundException;
 import com.spring.ayi.app.exception.custom.PageDoesNotExistException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -69,12 +68,6 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleMethodArgumentTypeMismatch(MethodArgumentTypeMismatchException ex) {
         codeStatus = HttpStatus.BAD_REQUEST.value();
         status = HttpStatus.BAD_REQUEST.name();
-
-//        Map<String, String> errors = new HashMap<>();
-//
-//        ex.getBindingResult().getFieldErrors().forEach(error -> {
-//            errors.put(error.getField(), error.getDefaultMessage());
-//        });
 
         ErrorResponse response = ErrorResponse.builder()
                 .status(status)
@@ -156,22 +149,8 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler(ClientDetailNotFoundException.class)
-    public ResponseEntity<ErrorResponse> handleClientDetailNotFound(ClientDetailNotFoundException ex) {
-        codeStatus = HttpStatus.NOT_FOUND.value();
-        status = HttpStatus.NOT_FOUND.name();
-        ErrorResponse response = ErrorResponse.builder()
-                .status(status)
-                .code(codeStatus)
-                .message(ex.getMessage())
-                .build();
-
-        logger.error(response.toString());
-        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
-    }
-
-    @ExceptionHandler(InvoiceNotFoundException.class)
-    public ResponseEntity<ErrorResponse> handleInvoiceNotFound(InvoiceNotFoundException ex) {
+    @ExceptionHandler(UserAccountNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleUserAccountNotFound(UserAccountNotFoundException ex) {
         codeStatus = HttpStatus.NOT_FOUND.value();
         status = HttpStatus.NOT_FOUND.name();
         ErrorResponse response = ErrorResponse.builder()

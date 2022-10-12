@@ -1,7 +1,7 @@
 package com.spring.ayi.app.service;
 
 import com.spring.ayi.app.dto.request.address.AddressRequest;
-import com.spring.ayi.app.dto.request.client.AddressRequestWithoutDocumentNumber;
+import com.spring.ayi.app.dto.request.address.AddressRequestWithoutDocumentNumber;
 import com.spring.ayi.app.dto.response.address.AddressResponse;
 import com.spring.ayi.app.dto.response.pagination.GenericListPaginationResponse;
 import com.spring.ayi.app.exception.custom.AddressNotFoundException;

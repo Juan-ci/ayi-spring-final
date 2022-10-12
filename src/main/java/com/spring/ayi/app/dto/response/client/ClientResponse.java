@@ -1,9 +1,8 @@
 package com.spring.ayi.app.dto.response.client;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.spring.ayi.app.dto.response.invoice.InvoiceResponse;
 import com.spring.ayi.app.dto.response.address.AddressResponse;
-import com.spring.ayi.app.dto.response.clientDetail.ClientDetailResponse;
+import com.spring.ayi.app.dto.response.userAccount.UserAccountResponse;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
@@ -37,17 +36,13 @@ public class ClientResponse implements Serializable {
     @ApiModelProperty(position = 4, notes = "The document number of the client.")
     private String documentNumber;
 
-    @ApiModelProperty(position = 5, notes = "The client detail.")
+    @ApiModelProperty(position = 5, notes = "The user account.")
     @JsonIgnoreProperties(value = "client")
-    private ClientDetailResponse clientDetail;
+    private UserAccountResponse userAccount;
 
     @JsonIgnoreProperties(value = "client")
     @ApiModelProperty(position = 6, notes = "The addresses of the client.")
     private List<AddressResponse> addresses;
-
-    @JsonIgnoreProperties(value = "client")
-    @ApiModelProperty(position = 7, notes = "The invoices of the client.")
-    private List<InvoiceResponse> invoices;
 
     @ApiModelProperty(position = 8, notes = "Soft delete.")
     private Boolean softDelete;
