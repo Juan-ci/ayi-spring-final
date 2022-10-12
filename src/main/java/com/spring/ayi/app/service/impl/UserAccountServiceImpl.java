@@ -3,6 +3,7 @@ package com.spring.ayi.app.service.impl;
 import com.spring.ayi.app.dto.request.userAccount.UserAccountRequest;
 import com.spring.ayi.app.dto.response.userAccount.UserAccountResponse;
 import com.spring.ayi.app.dto.response.pagination.GenericListPaginationResponse;
+import com.spring.ayi.app.entity.Address;
 import com.spring.ayi.app.entity.Client;
 import com.spring.ayi.app.entity.UserAccount;
 import com.spring.ayi.app.exception.custom.DocumentNumberAlreadyExistException;
@@ -151,12 +152,26 @@ public class UserAccountServiceImpl implements IUserAccountService {
         return userAccountMapper.convertEntityToDto(userAccountUpdated);
     }
 
+    /**
+     * When a user is deleted,
+     * all the entities related
+     * will be deleted
+     * @param idUserAccount
+     * @throws UserAccountNotFoundException
+     */
     @Override
     @Transactional
     public void deleteUserAccountById(Long idUserAccount) throws UserAccountNotFoundException {
         UserAccount userAccount = this.getUserAccountById(idUserAccount);
 
         userAccount.setSoftDelete(Boolean.TRUE);
+        userAccount.getClient().setSoftDelete(Boolean.TRUE);
+
+        List<Address> addresses = userAccount.getClient().getAddresses();
+        if (!addresses.isEmpty()) {
+            addresses.forEach(address -> address.setSoftDelete(Boolean.TRUE));
+        }
+
         userAccountRepository.save(userAccount);
     }
 
