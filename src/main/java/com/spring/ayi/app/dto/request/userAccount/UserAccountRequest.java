@@ -19,12 +19,12 @@ import java.io.Serializable;
 @Builder
 @ApiModel(
         value = "UserAccountRequest",
-        description = "Represents the data needed to create Clients details"
+        description = "Represents the data needed to create User accounts"
 )
 public class UserAccountRequest implements Serializable {
 
     @NotNull(message = "Mail can not be null.")
-    @ApiModelProperty(position = 1, required = true, notes = "Boolean data")
+    @ApiModelProperty(position = 1, required = true, notes = "Mail of the user")
     private String mail;
 
     @NotNull(message = "Password can not be null")
@@ -35,6 +35,6 @@ public class UserAccountRequest implements Serializable {
     @NotNull(message = "Client document number can not be null.")
     @Size(min = 7, message = "Client Document number min size is 7 and max size is 8")
     @Size(max = 8, message = "Client Document number min size is 7 and max size is 8")
-    @ApiModelProperty(position = 3, required = true, notes = "Client owner of the details")
+    @ApiModelProperty(position = 3, required = true, notes = "Client owner of the user account")
     private String clientDocumentNumber;
 }

@@ -3,6 +3,8 @@ package com.spring.ayi.app.controller;
 import com.spring.ayi.app.dto.request.userAccount.UserAccountRequest;
 import com.spring.ayi.app.dto.response.userAccount.UserAccountResponse;
 import com.spring.ayi.app.dto.response.pagination.GenericListPaginationResponse;
+import com.spring.ayi.app.exception.custom.DocumentNumberAlreadyExistException;
+import com.spring.ayi.app.exception.custom.MailAlreadyExistException;
 import com.spring.ayi.app.exception.custom.UserAccountNotFoundException;
 import com.spring.ayi.app.exception.custom.DocumentNumberNotFoundException;
 import com.spring.ayi.app.exception.custom.EmptyListException;
@@ -57,7 +59,7 @@ public class UserAccountController {
             (
                     @ApiParam(value = "data of user account", required = true)
                     @Valid @RequestBody UserAccountRequest request
-            ) throws DocumentNumberNotFoundException {
+            ) throws DocumentNumberAlreadyExistException, MailAlreadyExistException {
         UserAccountResponse userAccount = userAccountService.createUserAccount(request);
         return new ResponseEntity<>(userAccount, HttpStatus.CREATED);
     }
@@ -128,11 +130,11 @@ public class UserAccountController {
     public ResponseEntity<UserAccountResponse> updateUserAccount
             (
                     @ApiParam(value = "id of user account to update", required = true, example = "1")
-                    @PathVariable(name = "id") Long idClientDetail,
+                    @PathVariable(name = "id") Long idUserAccount,
                     @ApiParam(value = "data of user account", required = true)
                     @Valid @RequestBody UserAccountRequest request
-            ) throws UserAccountNotFoundException {
-        UserAccountResponse response = userAccountService.updateUserAccount(idClientDetail, request);
+            ) throws UserAccountNotFoundException, MailAlreadyExistException {
+        UserAccountResponse response = userAccountService.updateUserAccount(idUserAccount, request);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 

@@ -5,6 +5,8 @@ import com.spring.ayi.app.dto.response.userAccount.UserAccountResponse;
 import com.spring.ayi.app.dto.response.pagination.GenericListPaginationResponse;
 import com.spring.ayi.app.entity.Client;
 import com.spring.ayi.app.entity.UserAccount;
+import com.spring.ayi.app.exception.custom.DocumentNumberAlreadyExistException;
+import com.spring.ayi.app.exception.custom.MailAlreadyExistException;
 import com.spring.ayi.app.exception.custom.UserAccountNotFoundException;
 import com.spring.ayi.app.exception.custom.DocumentNumberNotFoundException;
 import com.spring.ayi.app.exception.custom.EmptyListException;
@@ -60,7 +62,7 @@ public class UserAccountServiceImpl implements IUserAccountService {
     @Override
     @Transactional
     public UserAccountResponse createUserAccount(UserAccountRequest request)
-            throws DocumentNumberNotFoundException {
+            throws DocumentNumberAlreadyExistException, MailAlreadyExistException {
         UserAccount userAccount = userAccountMapper.convertDtoToEntity(request);
 
         Client client = clientService.getClientByDocumentNumber(request.getClientDocumentNumber());
@@ -140,8 +142,9 @@ public class UserAccountServiceImpl implements IUserAccountService {
     @Override
     @Transactional
     public UserAccountResponse updateUserAccount(Long idUserAccount, UserAccountRequest request)
-            throws UserAccountNotFoundException {
+            throws UserAccountNotFoundException, MailAlreadyExistException {
         UserAccount userAccountToUpdate = this.getUserAccountById(idUserAccount);
+        //si viene mail, chequear que no se repita en BD
 
         UserAccount userAccountUpdated = userAccountRepository.save(userAccountToUpdate);
 

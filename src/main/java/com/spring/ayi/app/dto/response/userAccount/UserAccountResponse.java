@@ -17,8 +17,8 @@ import java.io.Serializable;
 @NoArgsConstructor
 @Builder
 @ApiModel(
-        value = "ClientDetailResponse",
-        description = "Response of client detail."
+        value = "UserAccountResponse",
+        description = "Response of user account."
 )
 public class UserAccountResponse implements Serializable {
 
@@ -34,4 +34,7 @@ public class UserAccountResponse implements Serializable {
 
     @ApiModelProperty(position = 4, notes = "Soft delete.")
     private Boolean softDelete;
+
+    //Si puedo automatizar la creación de user account con pass hasheado, agregar pass
+    //para mostrar user y pass ya creados
 }
