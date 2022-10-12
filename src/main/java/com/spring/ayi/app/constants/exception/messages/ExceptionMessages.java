@@ -8,9 +8,9 @@ public class ExceptionMessages {
 
     public static final String CLIENT_ID_NOT_FOUND = "CLIENT ID {0} NOT FOUND.";
 
-    public static final String CLIENT_DETAIL_ID_NOT_FOUND = "CLIENT DETAIL ID {0} NOT FOUND.";
+    public static final String USER_ACCOUNT_ID_NOT_FOUND = "USER ACCOUNT ID {0} NOT FOUND.";
 
-    public static final String INVOICE_ID_NOT_FOUND = "INVOICE ID {0} NOT FOUND.";
+    public static final String USER_ACCOUNT_MAIL_NOT_FOUND = "USER ACCOUNT MAIL {0} NOT FOUND.";
 
     public static final String DOCUMENT_NUMBER_NOT_FOUND = "DOCUMENT NUMBER {0} NOT FOUND.";
 

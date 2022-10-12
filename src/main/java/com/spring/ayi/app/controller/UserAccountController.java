@@ -1,13 +1,13 @@
 package com.spring.ayi.app.controller;
 
-import com.spring.ayi.app.dto.request.clientDetail.ClientDetailRequest;
-import com.spring.ayi.app.dto.response.clientDetail.ClientDetailResponse;
+import com.spring.ayi.app.dto.request.userAccount.UserAccountRequest;
+import com.spring.ayi.app.dto.response.userAccount.UserAccountResponse;
 import com.spring.ayi.app.dto.response.pagination.GenericListPaginationResponse;
-import com.spring.ayi.app.exception.custom.ClientDetailNotFoundException;
+import com.spring.ayi.app.exception.custom.UserAccountNotFoundException;
 import com.spring.ayi.app.exception.custom.DocumentNumberNotFoundException;
 import com.spring.ayi.app.exception.custom.EmptyListException;
 import com.spring.ayi.app.exception.custom.PageDoesNotExistException;
-import com.spring.ayi.app.service.IClientDetailService;
+import com.spring.ayi.app.service.IUserAccountService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -30,53 +30,53 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.validation.Valid;
 
-import static com.spring.ayi.app.constants.path.PathUrls.CLIENT_DETAIL_PATH;
+import static com.spring.ayi.app.constants.path.PathUrls.USER_ACCOUNT_PATH;
 
 @AllArgsConstructor
 @RestController
-@Api(value = "Client Detail Api", tags = "{Client Detail Service}")
-@RequestMapping(value = "/client-detail")
-public class ClientDetailController {
+@Api(value = "User Account Api", tags = "{User Account Service}")
+@RequestMapping(value = "/user-account")
+public class UserAccountController {
 
-    private IClientDetailService clientDetailService;
+    private IUserAccountService userAccountService;
 
-    @PostMapping(path = "/createClientDetail", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(path = "/createUserAccount", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(
-            value = "Retrieves a client detail created",
+            value = "Retrieves a user account created",
             httpMethod = "POST",
-            response = ClientDetailResponse.class
+            response = UserAccountResponse.class
     )
     @ApiResponses(value = {
             @ApiResponse(code = 201,
-                    message = "Body content with all information about client detail",
-                    response = ClientDetailResponse.class),
+                    message = "Body content with all information about user account",
+                    response = UserAccountResponse.class),
             @ApiResponse(code = 400,
                     message = "Describes errors on invalid payload received, e.g: missing fields, invalid data form")
     })
-    public ResponseEntity<ClientDetailResponse> createClientDetail
+    public ResponseEntity<UserAccountResponse> createUserAccount
             (
-                    @ApiParam(value = "data of client detail", required = true)
-                    @Valid @RequestBody ClientDetailRequest request
+                    @ApiParam(value = "data of user account", required = true)
+                    @Valid @RequestBody UserAccountRequest request
             ) throws DocumentNumberNotFoundException {
-        ClientDetailResponse clientDetailResponse = clientDetailService.createClientDetail(request);
-        return new ResponseEntity<>(clientDetailResponse, HttpStatus.CREATED);
+        UserAccountResponse userAccount = userAccountService.createUserAccount(request);
+        return new ResponseEntity<>(userAccount, HttpStatus.CREATED);
     }
 
-    @GetMapping(value = "/getAllClientDetails", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/getAllUserAccounts", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(
-            value = "Retrieves all Lists Clients details in a page",
+            value = "Retrieves all Lists Users accounts in a page",
             httpMethod = "GET",
             response = GenericListPaginationResponse.class
     )
     @ApiResponses(value = {
             @ApiResponse(code = 200,
-                    message = "Body content with basic information about clients details",
+                    message = "Body content with basic information about users accounts",
                     response = GenericListPaginationResponse.class),
             @ApiResponse(
                     code = 400,
                     message = "Describes errors on invalid payload received, e.g: missing fields, invalid data formats, etc.")
     })
-    public ResponseEntity<GenericListPaginationResponse<ClientDetailResponse>> getAllClientDetailsForPage
+    public ResponseEntity<GenericListPaginationResponse<UserAccountResponse>> getAllUserAccountsForPage
             (
                     @ApiParam(value = "page to display", example = "1")
                     @RequestParam(name = "page", defaultValue = "0") Integer page,
@@ -84,61 +84,61 @@ public class ClientDetailController {
                     @RequestParam(name = "size", defaultValue = "5") Integer size,
                     UriComponentsBuilder uriBuilder
             ) throws PageDoesNotExistException, EmptyListException {
-        GenericListPaginationResponse<ClientDetailResponse> response = clientDetailService.getAllClientDetail(CLIENT_DETAIL_PATH, page, size, uriBuilder);
+        GenericListPaginationResponse<UserAccountResponse> response = userAccountService.getAllUserAccount(USER_ACCOUNT_PATH, page, size, uriBuilder);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @GetMapping(value = "/getClientDetailById/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/getUserAccountById/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(
-            value = "Retrieves a client detail by the id",
+            value = "Retrieves a user account by the id",
             httpMethod = "GET",
-            response = ClientDetailResponse.class
+            response = UserAccountResponse.class
     )
     @ApiResponses(value = {
             @ApiResponse(
                     code = 200,
-                    message = "Body content with all information about a client detail"
+                    message = "Body content with all information about a user account"
             ),
             @ApiResponse(
                     code = 400,
                     message = "Describes errors on invalid payload received, e.g: missing fields, invalid data formats, etc.")
     })
-    public ResponseEntity<ClientDetailResponse> getClientDetailById
+    public ResponseEntity<UserAccountResponse> getUserAccountById
             (
-                    @ApiParam(name = "id", required = true, value = "Client detail Id", example = "1")
-                    @PathVariable("id") Long idClientDetail
-            ) throws ClientDetailNotFoundException {
-        ClientDetailResponse response = clientDetailService.getOneClientDetailById(idClientDetail);
+                    @ApiParam(name = "id", required = true, value = "User account Id", example = "1")
+                    @PathVariable("id") Long idUserAccount
+            ) throws UserAccountNotFoundException {
+        UserAccountResponse response = userAccountService.getOneUserAccountById(idUserAccount);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @PutMapping(value = "/updateClientDetail/{id}")
+    @PutMapping(value = "/updateUserAccount/{id}")
     @ApiOperation(
-            value = "Retrieves a client detail updated",
+            value = "Retrieves a user account updated",
             httpMethod = "PUT",
-            response = ClientDetailResponse.class
+            response = UserAccountResponse.class
     )
     @ApiResponses(value = {
             @ApiResponse(code = 200,
-                    message = "Body content with all information about client detail updated",
-                    response = ClientDetailResponse.class),
+                    message = "Body content with all information about user account updated",
+                    response = UserAccountResponse.class),
             @ApiResponse(code = 400,
                     message = "Describes errors on invalid payload received, e.g: missing fields, invalid data form")
     })
-    public ResponseEntity<ClientDetailResponse> updateClientDetail
+    public ResponseEntity<UserAccountResponse> updateUserAccount
             (
-                    @ApiParam(value = "id of client detail to update", required = true, example = "1")
+                    @ApiParam(value = "id of user account to update", required = true, example = "1")
                     @PathVariable(name = "id") Long idClientDetail,
-                    @ApiParam(value = "data of client", required = true)
-                    @Valid @RequestBody ClientDetailRequest request
-            ) throws ClientDetailNotFoundException {
-        ClientDetailResponse response = clientDetailService.updateClientDetail(idClientDetail, request);
+                    @ApiParam(value = "data of user account", required = true)
+                    @Valid @RequestBody UserAccountRequest request
+            ) throws UserAccountNotFoundException {
+        UserAccountResponse response = userAccountService.updateUserAccount(idClientDetail, request);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @DeleteMapping(value = "/deleteClientDetailById/{id}")
+    @DeleteMapping(value = "/deleteUserAccountById/{id}")
     @ApiOperation(
-            value = "Delete a client detail by id",
+            value = "Delete a user account by id",
             httpMethod = "DELETE"
     )
     @ApiResponses(value = {
@@ -148,14 +148,14 @@ public class ClientDetailController {
             ),
             @ApiResponse(
                     code = 404,
-                    message = "Describes errors on invalid id wich is not found.")
+                    message = "Describes errors on invalid id which is not found.")
     })
-    public ResponseEntity<Void> deleteClientDetailById
+    public ResponseEntity<Void> deleteUserAccountById
             (
-                    @ApiParam(name = "id", required = true, value = "Client detail Id", example = "1")
-                    @PathVariable("id") Long idClientDetail
-            ) throws ClientDetailNotFoundException {
-        clientDetailService.deleteClientDetailById(idClientDetail);
+                    @ApiParam(name = "id", required = true, value = "User account Id", example = "1")
+                    @PathVariable("id") Long idUserAccount
+            ) throws UserAccountNotFoundException {
+        userAccountService.deleteUserAccountById(idUserAccount);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

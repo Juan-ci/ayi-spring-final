@@ -1,4 +1,4 @@
-package com.spring.ayi.app.dto.request.client;
+package com.spring.ayi.app.dto.request.address;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;

@@ -7,6 +7,7 @@ import com.spring.ayi.app.exception.custom.ClientNotFoundException;
 import com.spring.ayi.app.exception.custom.DocumentNumberAlreadyExistException;
 import com.spring.ayi.app.exception.custom.EmptyListException;
 import com.spring.ayi.app.exception.custom.PageDoesNotExistException;
+import com.spring.ayi.app.exception.custom.UserAccountNotFoundException;
 import com.spring.ayi.app.service.IClientService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -56,7 +57,7 @@ public class ClientController {
     public ResponseEntity<ClientResponse> createClient(
             @ApiParam(value = "data of client", required = true)
             @Valid @RequestBody ClientRequest request
-    ) throws DocumentNumberAlreadyExistException {
+    ) throws DocumentNumberAlreadyExistException, UserAccountNotFoundException {
         ClientResponse response = clientService.createClient(request);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
@@ -125,7 +126,7 @@ public class ClientController {
             @PathVariable(name = "id") Long idClient,
             @ApiParam(value = "data of client", required = true)
             @Valid @RequestBody ClientRequest request
-    ) throws ClientNotFoundException {
+    ) throws ClientNotFoundException, UserAccountNotFoundException {
         ClientResponse response = clientService.updateClient(idClient, request);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }

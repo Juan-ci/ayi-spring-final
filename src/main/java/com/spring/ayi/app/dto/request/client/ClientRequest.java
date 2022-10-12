@@ -1,6 +1,7 @@
 package com.spring.ayi.app.dto.request.client;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.spring.ayi.app.dto.request.address.AddressRequestWithoutDocumentNumber;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
@@ -9,6 +10,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
@@ -28,9 +30,7 @@ import java.util.List;
 public class ClientRequest implements Serializable {
 
     /**
-     * Basic data needed to create a client,
-     * it is not allowed to add invoices when
-     * you are creating the client
+     * Basic data needed to create a client
      */
 
     @NotNull(message = "Name can not be null.")
@@ -49,9 +49,9 @@ public class ClientRequest implements Serializable {
     @ApiModelProperty(position = 3, required = true, notes = "Non negative value, The document number is required.")
     private String documentNumber;
 
-    @NotNull(message = "Client detail can not be null.")
-    @ApiModelProperty(position = 4, required = true, notes = "Non empty value, The client detail is required.")
-    private ClientDetailOnClientRequest clientDetail;
+    @Email(regexp = "[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}", message = "Email format must be valid")
+    @ApiModelProperty(position = 4, notes = "Mail account.")
+    private String mailAccount;
 
     @NotEmpty(message = "Address can not be null.")
     @ApiModelProperty(position = 5, required = true, notes = "Non empty value, The address is required.")

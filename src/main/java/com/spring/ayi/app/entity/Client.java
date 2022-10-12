@@ -10,6 +10,7 @@ import lombok.ToString;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -46,16 +47,13 @@ public class Client implements Serializable {
     @Column(name = "document_number", unique = true)
     private String documentNumber;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "client_detail_id", referencedColumnName = "id_client_detail")
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_account_id", referencedColumnName = "id_user_account")
     @JsonIgnoreProperties(value = "client")
-    private ClientDetail clientDetail;
+    private UserAccount userAccount;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Address> addresses = new ArrayList<>();
-
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Invoice> invoices = new ArrayList<>();
 
     @Column(name = "soft_delete")
     private Boolean softDelete = Boolean.FALSE;
