@@ -53,6 +53,14 @@ public class ClientServiceImpl implements IClientService {
         this.clientMapper = clientMapper;
     }
 
+    /**
+     * It is allowed to create a client
+     * without a user account
+     * @param request
+     * @return
+     * @throws DocumentNumberAlreadyExistException
+     * @throws UserAccountNotFoundException
+     */
     @Override
     @Transactional
     public ClientResponse createClient(ClientRequest request)
@@ -225,6 +233,11 @@ public class ClientServiceImpl implements IClientService {
                 .orElseThrow(
                         () -> new DocumentNumberNotFoundException(format(DOCUMENT_NUMBER_NOT_FOUND, documentNumber))
                 );
+    }
+
+    @Override
+    public Boolean existsClientByDocumentNumber(String documentNumber) {
+        return clientRepository.existsByDocumentNumber(documentNumber);
     }
 
     private Client getClientById(Long idClient) throws ClientNotFoundException {

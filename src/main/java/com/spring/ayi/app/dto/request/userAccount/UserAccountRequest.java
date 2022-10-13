@@ -1,5 +1,6 @@
 package com.spring.ayi.app.dto.request.userAccount;
 
+import com.spring.ayi.app.dto.request.client.ClientRequestWithoutMailAccount;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
@@ -8,6 +9,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
@@ -24,17 +26,15 @@ import java.io.Serializable;
 public class UserAccountRequest implements Serializable {
 
     @NotNull(message = "Mail can not be null.")
+    @Email(regexp = "[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}", message = "Email format must be valid")
     @ApiModelProperty(position = 1, required = true, notes = "Mail of the user")
     private String mail;
 
     @NotNull(message = "Password can not be null")
-    //Agregar size
+    @Size(min = 8, message = "Min size is 8 characters.")
     @ApiModelProperty(position = 2, notes = "Password of the account")
     private String password;
 
-    @NotNull(message = "Client document number can not be null.")
-    @Size(min = 7, message = "Client Document number min size is 7 and max size is 8")
-    @Size(max = 8, message = "Client Document number min size is 7 and max size is 8")
-    @ApiModelProperty(position = 3, required = true, notes = "Client owner of the user account")
-    private String clientDocumentNumber;
+    @ApiModelProperty(position = 3, notes = "Client owner of the user account. Could be null")
+    private ClientRequestWithoutMailAccount client;
 }

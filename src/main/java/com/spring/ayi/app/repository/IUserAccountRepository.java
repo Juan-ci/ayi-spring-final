@@ -10,4 +10,6 @@ import java.util.Optional;
 public interface IUserAccountRepository extends JpaRepository<UserAccount, Long> {
 
     Optional<UserAccount> findByMail(String mailAccount);
+
+    Boolean existsByMail(String mail);
 }

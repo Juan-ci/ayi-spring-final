@@ -38,4 +38,6 @@ public interface IClientService {
 
     @Transactional
     Client getClientByDocumentNumber(String documentNumber) throws DocumentNumberNotFoundException;
+
+    Boolean existsClientByDocumentNumber(String documentNumber);
 }

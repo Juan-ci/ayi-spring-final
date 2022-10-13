@@ -2,6 +2,7 @@ package com.spring.ayi.app.exception;
 
 import com.spring.ayi.app.dto.response.error.ErrorResponse;
 import com.spring.ayi.app.exception.custom.AddressNotFoundException;
+import com.spring.ayi.app.exception.custom.MailAlreadyExistException;
 import com.spring.ayi.app.exception.custom.UserAccountNotFoundException;
 import com.spring.ayi.app.exception.custom.ClientNotFoundException;
 import com.spring.ayi.app.exception.custom.DocumentNumberAlreadyExistException;
@@ -31,6 +32,20 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(DocumentNumberAlreadyExistException.class)
     public ResponseEntity<ErrorResponse> handleDocumentNumberAlreadyExist(DocumentNumberAlreadyExistException ex) {
+        codeStatus = HttpStatus.BAD_REQUEST.value();
+        status = HttpStatus.BAD_REQUEST.name();
+        ErrorResponse response = ErrorResponse.builder()
+                .status(status)
+                .code(codeStatus)
+                .message(ex.getMessage())
+                .build();
+
+        logger.error(response.toString());
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(MailAlreadyExistException.class)
+    public ResponseEntity<ErrorResponse> handleMailAlreadyExist(MailAlreadyExistException ex) {
         codeStatus = HttpStatus.BAD_REQUEST.value();
         status = HttpStatus.BAD_REQUEST.name();
         ErrorResponse response = ErrorResponse.builder()

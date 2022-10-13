@@ -1,5 +1,6 @@
 package com.spring.ayi.app.service.impl;
 
+import com.spring.ayi.app.constants.exception.messages.ExceptionMessages;
 import com.spring.ayi.app.dto.request.userAccount.UserAccountRequest;
 import com.spring.ayi.app.dto.response.userAccount.UserAccountResponse;
 import com.spring.ayi.app.dto.response.pagination.GenericListPaginationResponse;
@@ -53,28 +54,46 @@ public class UserAccountServiceImpl implements IUserAccountService {
     }
 
     /**
-     * It is not allowed to create a client detail
-     * without an existing client previously
-     * 
+     * It is allowed to create a user account
+     * without a client. If you want to set the
+     * user account to an existing client, you
+     * have to create the user account and then
+     * update the client
      * @param request
      * @return
      * @throws DocumentNumberNotFoundException
+     * @throws MailAlreadyExistException
      */
     @Override
     @Transactional
     public UserAccountResponse createUserAccount(UserAccountRequest request)
             throws DocumentNumberAlreadyExistException, MailAlreadyExistException {
         UserAccount userAccount = userAccountMapper.convertDtoToEntity(request);
+        Client client = userAccount.getClient();
+        String mail = userAccount.getMail();
+        boolean mailExist = userAccountRepository.existsByMail(mail);
 
-        Client client = clientService.getClientByDocumentNumber(request.getClientDocumentNumber());
+        if (!mailExist) {
+            if (client != null && !clientService.existsClientByDocumentNumber(client.getDocumentNumber())) {
+                client.setUserAccount(userAccount);
 
-        if (client != null) {
-            client.setUserAccount(userAccount);
-            userAccount.setClient(client);
-            userAccount = userAccountRepository.save(userAccount);
+                List<Address> addresses = client.getAddresses();
+                if (addresses != null) {
+                    addresses.forEach(address -> {
+                        address.setClient(client);
+                    });
 
+                    client.setAddresses(addresses);
+                }
+            }
+
+            //Agregar hasheo de password
+            UserAccount userAccountCreated = userAccountRepository.save(userAccount);
+
+            return userAccountMapper.convertEntityToDto(userAccountCreated);
+        } else {
+            throw new MailAlreadyExistException(format(ExceptionMessages.MAIL_ALREADY_EXIST, mail));
         }
-        return userAccountMapper.convertEntityToDto(userAccount);
     }
 
     @Override

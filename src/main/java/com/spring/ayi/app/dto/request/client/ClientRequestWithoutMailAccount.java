@@ -10,7 +10,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
@@ -24,10 +23,10 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 @ApiModel(
-        value = "ClientRequest",
+        value = "ClientRequestWithoutMailAccount",
         description = "Represents the data needed to create Clients"
 )
-public class ClientRequest implements Serializable {
+public class ClientRequestWithoutMailAccount  implements Serializable {
     /**
      * Basic data needed to create a client
      */
@@ -48,12 +47,8 @@ public class ClientRequest implements Serializable {
     @ApiModelProperty(position = 3, required = true, notes = "Non negative value, The document number is required.")
     private String documentNumber;
 
-    @Email(regexp = "[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}", message = "Email format must be valid")
-    @ApiModelProperty(position = 4, notes = "Mail account.")
-    private String mailAccount;
-
     @NotEmpty(message = "Address can not be null.")
-    @ApiModelProperty(position = 5, required = true, notes = "Non empty value, The address is required.")
+    @ApiModelProperty(position = 4, required = true, notes = "Non empty value, The address is required.")
     @JsonIgnoreProperties(value = "clientDocumentNumber")
     private List<AddressRequestWithoutDocumentNumber> addresses;
 }
