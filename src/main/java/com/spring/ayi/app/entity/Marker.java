@@ -1,6 +1,5 @@
 package com.spring.ayi.app.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -8,14 +7,11 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import java.io.Serializable;
 
@@ -26,26 +22,27 @@ import java.io.Serializable;
 @ToString
 @Builder
 @Entity
-@Table(name = "user_account")
-public class UserAccount implements Serializable {
+@Table(name = "marker")
+public class Marker implements Serializable {
 
     private static final Long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_user_account")
-    private Long idUserAccount;
+    @Column(name = "id_marker")
+    private Long idMarker;
 
-    @Column(name = "mail")
-    private String mail;
+    @Column(name = "name")
+    private String name;
 
-    @Column(name = "password")
-    private String password;
+    @Column(name = "lastname")
+    private String lastname;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JsonIgnoreProperties(value = "userAccount")
-    @JoinColumn(name = "client_id")
-    private Client client;
+    @Column(name = "longitude")
+    private Float longitude;
+
+    @Column(name = "latitude")
+    private Float latitude;
 
     @Column(name = "soft_delete")
     private Boolean softDelete = Boolean.FALSE;
