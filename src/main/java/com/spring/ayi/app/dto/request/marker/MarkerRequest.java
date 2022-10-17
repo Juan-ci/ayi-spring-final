@@ -31,9 +31,9 @@ public class MarkerRequest implements Serializable {
 
     @NotNull(message = "Longitude can not be null")
     @ApiModelProperty(position = 3, notes = "Longitude cords")
-    private Float longitude;
+    private Double longitude;
 
     @NotNull(message = "Latitude can not be null")
     @ApiModelProperty(position = 4, notes = "Latitude cords")
-    private Float latitude;
+    private Double latitude;
 }

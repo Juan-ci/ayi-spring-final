@@ -30,10 +30,10 @@ public class MarkerResponse implements Serializable {
     private String lastname;
 
     @ApiModelProperty(position = 4, notes = "Longitude cords")
-    private Float longitude;
+    private Double longitude;
 
     @ApiModelProperty(position = 5, notes = "Latitude cords")
-    private Float latitude;
+    private Double latitude;
 
     @ApiModelProperty(position = 6, notes = "Soft delete.")
     private Boolean softDelete;

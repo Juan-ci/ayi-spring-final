@@ -2,60 +2,59 @@ package com.spring.ayi.app.service.impl;
 
 import com.spring.ayi.app.dto.request.marker.MarkerRequest;
 import com.spring.ayi.app.dto.response.marker.MarkerResponse;
-import com.spring.ayi.app.dto.response.pagination.GenericListPaginationResponse;
 import com.spring.ayi.app.entity.Marker;
 import com.spring.ayi.app.exception.custom.UserAccountNotFoundException;
 import com.spring.ayi.app.exception.custom.EmptyListException;
 import com.spring.ayi.app.mapper.IMarkerMapper;
 import com.spring.ayi.app.repository.IMarkerRepository;
 import com.spring.ayi.app.service.IMarkerService;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
+import java.util.List;
+
+import static com.spring.ayi.app.constants.exception.messages.ExceptionMessages.EMPTY_LIST_EXCEPTION;
 import static com.spring.ayi.app.constants.exception.messages.ExceptionMessages.USER_ACCOUNT_ID_NOT_FOUND;
 import static java.text.MessageFormat.format;
 
 @Service
 public class MarkerServiceImpl implements IMarkerService {
 
-    private IMarkerRepository userAccountRepository;
+    private IMarkerRepository markerRepository;
 
-    private IMarkerMapper userAccountMapper;
+    private IMarkerMapper markerMapper;
 
     private static final String LIST_TYPE_EXCEPTION = "MARKERS";
 
-    public MarkerServiceImpl(IMarkerRepository userAccountRepository,
-                             IMarkerMapper userAccountMapper) {
-        this.userAccountRepository = userAccountRepository;
-        this.userAccountMapper = userAccountMapper;
+    public MarkerServiceImpl(IMarkerRepository markerRepository,
+                             IMarkerMapper markerMapper) {
+        this.markerRepository = markerRepository;
+        this.markerMapper = markerMapper;
     }
 
     @Override
     @Transactional
     public MarkerResponse createMarker(MarkerRequest request) {
-        Marker marker = userAccountMapper.convertDtoToEntity(request);
+        Marker marker = markerMapper.convertDtoToEntity(request);
 
         return null;
     }
 
     @Override
     @Transactional
-    public GenericListPaginationResponse<MarkerResponse> getAllMarkers
-            (
-                    String uri,
-                    int pageReq,
-                    Integer size,
-                    UriComponentsBuilder uriBuilder
-            ) throws EmptyListException {
-        GenericListPaginationResponse<MarkerResponse> userAccountPagesResponse = new GenericListPaginationResponse<>();
-        Pageable pageable = PageRequest.of(pageReq, size);
-        Page<Marker> userAccountPage = userAccountRepository.findAll(pageable);
+    public List<MarkerResponse> getAllMarkers() throws EmptyListException {
+        List<Marker> markersList = markerRepository.findAll();
 
-        return null;
+        if ( !markersList.isEmpty() ) {
+            List<MarkerResponse> markerResponses = new ArrayList<>();
+
+            markersList.forEach(marker -> markerResponses.add(markerMapper.convertEntityToDto(marker)));
+
+            return markerResponses;
+        } else {
+            throw new EmptyListException(format(EMPTY_LIST_EXCEPTION, LIST_TYPE_EXCEPTION));
+        }
     }
 
     @Override
@@ -65,11 +64,11 @@ public class MarkerServiceImpl implements IMarkerService {
 
         marker.setSoftDelete(Boolean.TRUE);
 
-        userAccountRepository.save(marker);
+        markerRepository.save(marker);
     }
 
     private Marker getUserAccountById(Long idMarker) throws UserAccountNotFoundException {
-        return userAccountRepository
+        return markerRepository
                 .findById(idMarker)
                 .orElseThrow(
                         () -> new UserAccountNotFoundException(format(USER_ACCOUNT_ID_NOT_FOUND, idMarker))

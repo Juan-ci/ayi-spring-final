@@ -2,7 +2,6 @@ package com.spring.ayi.app.controller;
 
 import com.spring.ayi.app.dto.request.marker.MarkerRequest;
 import com.spring.ayi.app.dto.response.marker.MarkerResponse;
-import com.spring.ayi.app.dto.response.pagination.GenericListPaginationResponse;
 import com.spring.ayi.app.exception.custom.UserAccountNotFoundException;
 import com.spring.ayi.app.exception.custom.EmptyListException;
 import com.spring.ayi.app.service.IMarkerService;
@@ -21,11 +20,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @AllArgsConstructor
 @RestController
@@ -61,24 +59,17 @@ public class MarkerController {
     @ApiOperation(
             value = "Retrieves a list of markers",
             httpMethod = "GET",
-            response = GenericListPaginationResponse.class
+            response = MarkerResponse[].class
     )
     @ApiResponses(value = {
             @ApiResponse(code = 200,
                     message = "Body content with basic information about marker",
-                    response = GenericListPaginationResponse.class),
+                    response = MarkerResponse[].class),
             @ApiResponse(
                     code = 400,
                     message = "Describes errors on invalid payload received, e.g: missing fields, invalid data formats, etc.")
     })
-    public ResponseEntity<GenericListPaginationResponse<MarkerResponse>> getAllMarkers
-            (
-                    @ApiParam(value = "page to display", example = "1")
-                    @RequestParam(name = "page", defaultValue = "0") Integer page,
-                    @ApiParam(value = "number of items per request", example = "1")
-                    @RequestParam(name = "size", defaultValue = "5") Integer size,
-                    UriComponentsBuilder uriBuilder
-            ) throws EmptyListException {
+    public ResponseEntity<List<MarkerResponse>> getAllMarkers() throws EmptyListException {
 
         return new ResponseEntity<>( HttpStatus.OK);
     }

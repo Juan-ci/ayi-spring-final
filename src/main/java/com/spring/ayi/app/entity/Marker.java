@@ -38,11 +38,11 @@ public class Marker implements Serializable {
     @Column(name = "lastname")
     private String lastname;
 
-    @Column(name = "longitude")
-    private Float longitude;
+    @Column(name = "longitude", precision = 8, scale = 6)
+    private Double longitude;
 
-    @Column(name = "latitude")
-    private Float latitude;
+    @Column(name = "latitude", precision = 8, scale = 6)
+    private Double latitude;
 
     @Column(name = "soft_delete")
     private Boolean softDelete = Boolean.FALSE;
