@@ -1,1 +1,1 @@
-web:    java $JAVA_OPTS -jar target/dependency/final-0.0.1-SNAPSHOT.jar --port $PORT target/*.war
+web: java $JAVA_OPTS -cp target/classes:target/dependency/* com.spring.ayi.app.FinalApplication
