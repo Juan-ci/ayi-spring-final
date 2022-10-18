@@ -38,7 +38,9 @@ public class MarkerServiceImpl implements IMarkerService {
     public MarkerResponse createMarker(MarkerRequest request) {
         Marker marker = markerMapper.convertDtoToEntity(request);
 
-        return null;
+        marker = markerRepository.save(marker);
+
+        return markerMapper.convertEntityToDto(marker);
     }
 
     @Override

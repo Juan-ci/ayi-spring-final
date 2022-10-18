@@ -14,6 +14,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -29,6 +30,7 @@ import java.util.List;
 @RestController
 @Api(value = "Marker Api", tags = "{Marker Service}")
 @RequestMapping(value = "/marker")
+@CrossOrigin(origins = "*")
 public class MarkerController {
 
     private IMarkerService markerService;
@@ -51,6 +53,7 @@ public class MarkerController {
                     @ApiParam(value = "data of marker", required = true)
                     @Valid @RequestBody MarkerRequest request
             ) {
+        System.out.println("REQUEST " + request);
         MarkerResponse marker = markerService.createMarker(request);
         return new ResponseEntity<>(marker, HttpStatus.CREATED);
     }
@@ -70,8 +73,8 @@ public class MarkerController {
                     message = "Describes errors on invalid payload received, e.g: missing fields, invalid data formats, etc.")
     })
     public ResponseEntity<List<MarkerResponse>> getAllMarkers() throws EmptyListException {
-
-        return new ResponseEntity<>( HttpStatus.OK);
+        List<MarkerResponse> responses = markerService.getAllMarkers();
+        return new ResponseEntity<>(responses, HttpStatus.OK);
     }
 
     @DeleteMapping(value = "/deleteMarkerById/{id}")
