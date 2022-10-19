@@ -96,6 +96,7 @@ public class MarkerController {
                     @ApiParam(name = "id", required = true, value = "Marker Id", example = "1")
                     @PathVariable("id") Long idMarker
             ) throws UserAccountNotFoundException {
+        System.out.println("ID MARKER: " + idMarker);
         markerService.deleteMarkerById(idMarker);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

@@ -46,17 +46,16 @@ public class MarkerServiceImpl implements IMarkerService {
     @Override
     @Transactional
     public List<MarkerResponse> getAllMarkers() throws EmptyListException {
-        List<Marker> markersList = markerRepository.findAll();
+        List<Marker> markersList = markerRepository.findAllBySoftDeleteIsFalse();
+        List<MarkerResponse> markerResponses = new ArrayList<>();
 
-        if ( !markersList.isEmpty() ) {
-            List<MarkerResponse> markerResponses = new ArrayList<>();
+        if (!markersList.isEmpty()) {
 
             markersList.forEach(marker -> markerResponses.add(markerMapper.convertEntityToDto(marker)));
 
             return markerResponses;
-        } else {
-            throw new EmptyListException(format(EMPTY_LIST_EXCEPTION, LIST_TYPE_EXCEPTION));
         }
+        return markerResponses;
     }
 
     @Override
