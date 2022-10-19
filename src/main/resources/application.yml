@@ -6,7 +6,7 @@ spring:
   # Datasource settings, se debe agregar la informacion de la base de datos local.
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://migae5o25m2psr4q.cbetxkdyhwsb.us-east-1.rds.amazonaws.com:3306/xdrq56yxbmmwv3ys
+    url: mysql://migae5o25m2psr4q.cbetxkdyhwsb.us-east-1.rds.amazonaws.com:3306/xdrq56yxbmmwv3ys
     #url: jdbc:mysql://localhost:3306/spring_final_ayidb?createDatabaseIfNotExist=true
     username: mon75uvhrroovfm5
     #username: root
@@ -18,7 +18,7 @@ spring:
         show_sql: true
         format_sql: true
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: update
     defer-datasource-initialization: 'true'
   #sql:
    # init:
