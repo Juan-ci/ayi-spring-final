@@ -23,10 +23,10 @@ import java.io.Serializable;
 )
 public class MarkerRequest implements Serializable {
 
-    @ApiModelProperty(position = 1, required = true, notes = "Mail of the user")
+    @ApiModelProperty(position = 1, required = true, notes = "Name of the user")
     private String name;
 
-    @ApiModelProperty(position = 2, notes = "Password of the account")
+    @ApiModelProperty(position = 2, notes = "Lastname of the user")
     private String lastname;
 
     @NotNull(message = "Longitude can not be null")

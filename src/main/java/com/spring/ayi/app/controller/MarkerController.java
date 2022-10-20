@@ -2,7 +2,7 @@ package com.spring.ayi.app.controller;
 
 import com.spring.ayi.app.dto.request.marker.MarkerRequest;
 import com.spring.ayi.app.dto.response.marker.MarkerResponse;
-import com.spring.ayi.app.exception.custom.UserAccountNotFoundException;
+import com.spring.ayi.app.exception.custom.MarkerNotFoundException;
 import com.spring.ayi.app.exception.custom.EmptyListException;
 import com.spring.ayi.app.service.IMarkerService;
 import io.swagger.annotations.Api;
@@ -95,7 +95,7 @@ public class MarkerController {
             (
                     @ApiParam(name = "id", required = true, value = "Marker Id", example = "1")
                     @PathVariable("id") Long idMarker
-            ) throws UserAccountNotFoundException {
+            ) throws MarkerNotFoundException {
         System.out.println("ID MARKER: " + idMarker);
         markerService.deleteMarkerById(idMarker);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);

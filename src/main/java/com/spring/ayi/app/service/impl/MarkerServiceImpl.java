@@ -3,7 +3,7 @@ package com.spring.ayi.app.service.impl;
 import com.spring.ayi.app.dto.request.marker.MarkerRequest;
 import com.spring.ayi.app.dto.response.marker.MarkerResponse;
 import com.spring.ayi.app.entity.Marker;
-import com.spring.ayi.app.exception.custom.UserAccountNotFoundException;
+import com.spring.ayi.app.exception.custom.MarkerNotFoundException;
 import com.spring.ayi.app.exception.custom.EmptyListException;
 import com.spring.ayi.app.mapper.IMarkerMapper;
 import com.spring.ayi.app.repository.IMarkerRepository;
@@ -14,8 +14,7 @@ import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.spring.ayi.app.constants.exception.messages.ExceptionMessages.EMPTY_LIST_EXCEPTION;
-import static com.spring.ayi.app.constants.exception.messages.ExceptionMessages.USER_ACCOUNT_ID_NOT_FOUND;
+import static com.spring.ayi.app.constants.exception.messages.ExceptionMessages.MARKER_ID_NOT_FOUND;
 import static java.text.MessageFormat.format;
 
 @Service
@@ -60,7 +59,7 @@ public class MarkerServiceImpl implements IMarkerService {
 
     @Override
     @Transactional
-    public void deleteMarkerById(Long idMarker) throws UserAccountNotFoundException {
+    public void deleteMarkerById(Long idMarker) throws MarkerNotFoundException {
         Marker marker = this.getUserAccountById(idMarker);
 
         marker.setSoftDelete(Boolean.TRUE);
@@ -68,11 +67,11 @@ public class MarkerServiceImpl implements IMarkerService {
         markerRepository.save(marker);
     }
 
-    private Marker getUserAccountById(Long idMarker) throws UserAccountNotFoundException {
+    private Marker getUserAccountById(Long idMarker) throws MarkerNotFoundException {
         return markerRepository
                 .findById(idMarker)
                 .orElseThrow(
-                        () -> new UserAccountNotFoundException(format(USER_ACCOUNT_ID_NOT_FOUND, idMarker))
+                        () -> new MarkerNotFoundException(format(MARKER_ID_NOT_FOUND, idMarker))
                 );
     }
 }

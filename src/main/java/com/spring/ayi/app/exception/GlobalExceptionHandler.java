@@ -1,7 +1,7 @@
 package com.spring.ayi.app.exception;
 
 import com.spring.ayi.app.dto.response.error.ErrorResponse;
-import com.spring.ayi.app.exception.custom.UserAccountNotFoundException;
+import com.spring.ayi.app.exception.custom.MarkerNotFoundException;
 import com.spring.ayi.app.exception.custom.EmptyListException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -89,8 +89,8 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler(UserAccountNotFoundException.class)
-    public ResponseEntity<ErrorResponse> handleUserAccountNotFound(UserAccountNotFoundException ex) {
+    @ExceptionHandler(MarkerNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleMarkerNotFound(MarkerNotFoundException ex) {
         codeStatus = HttpStatus.NOT_FOUND.value();
         status = HttpStatus.NOT_FOUND.name();
         ErrorResponse response = ErrorResponse.builder()

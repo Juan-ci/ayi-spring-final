@@ -2,7 +2,7 @@ package com.spring.ayi.app.service;
 
 import com.spring.ayi.app.dto.request.marker.MarkerRequest;
 import com.spring.ayi.app.dto.response.marker.MarkerResponse;
-import com.spring.ayi.app.exception.custom.UserAccountNotFoundException;
+import com.spring.ayi.app.exception.custom.MarkerNotFoundException;
 import com.spring.ayi.app.exception.custom.EmptyListException;
 import org.springframework.stereotype.Service;
 
@@ -19,5 +19,5 @@ public interface IMarkerService {
     List<MarkerResponse> getAllMarkers() throws EmptyListException;
 
     @Transactional
-    void deleteMarkerById(Long idMarker) throws UserAccountNotFoundException;
+    void deleteMarkerById(Long idMarker) throws MarkerNotFoundException;
 }
